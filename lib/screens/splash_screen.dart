@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:flex/helper/app_colors.dart';
+import 'package:flex/helper/app_routes.dart';
+import 'package:flex/helper/app_utils.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -6,8 +11,37 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+
+    Utils.setScreenSizes(context);
+
+    return Scaffold(
+      backgroundColor: PRIMARY_COLOR,
+      body: Center(
+        child: SizedBox(
+          height: Utils.getDesignHeight(220),
+          width: Utils.getDesignWidth(220),
+          child: Image.asset('assets/images/logo.png'),
+        ),
+      ),
+    );
+  }
+
+  _loadScreen() async {
+    var _duration = Duration(seconds: 3);
+    return Timer(_duration, navigationPage);
+  }
+
+  void navigationPage() {
+    Navigator.pushReplacementNamed(context, LANDING_SCREEN);
   }
 }
