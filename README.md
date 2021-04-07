@@ -2,6 +2,11 @@
 
 Enhance user engagement in physical activity application using adaptive gamification
 
+Killer - Leaderboard and Points elements
+Achiever - Level and Point elements triggered the Progression
+Explorer - Level, Story, Badge and Achievement
+Socializer - Story, Badge and Achievement elements
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
