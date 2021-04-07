@@ -60,12 +60,12 @@ class _LandingScreenState extends State<LandingScreen> {
                   elevation: 0.0,
                 ),
                 child: Text(
-                  "Continue as a User",
+                  "Login",
                   style: Theme.of(context).primaryTextTheme.button.copyWith(
                     color: PRIMARY_COLOR
                   ),
                 ),
-                onPressed: () => Navigator.pushNamed(context, USER_SIGN_UP_SCREEN),
+                onPressed: () => Navigator.pushNamed(context, USER_LOGIN_SCREEN),
               ),
             ),
             Container(
@@ -88,12 +88,12 @@ class _LandingScreenState extends State<LandingScreen> {
                   elevation: 0.0,
                 ),
                 child: Text(
-                  "Continue as a Trainer",
+                  "Register",
                   style: Theme.of(context).primaryTextTheme.button.copyWith(
                       color: PRIMARY_COLOR
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () => Navigator.pushNamed(context, USER_SIGN_UP_SCREEN),
               ),
             ),
           ],

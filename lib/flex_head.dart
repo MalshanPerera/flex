@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/bloc/onboarding_bloc.dart';
-import 'package:flex/bloc/signUp_bloc.dart';
+import 'package:flex/bloc/authentication_bloc.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/app_strings.dart';
@@ -11,6 +11,7 @@ import 'package:flex/screens/home_screen.dart';
 import 'package:flex/screens/onboarding_screen.dart';
 import 'package:flex/screens/landing_screen.dart';
 import 'package:flex/screens/splash_screen.dart';
+import 'package:flex/screens/user_screens/user_login_screen.dart';
 import 'package:flex/screens/user_screens/user_sigin_up_screen.dart';
 import 'package:flex/service_locator.dart';
 import 'package:flex/services/base_managers/exceptions.dart';
@@ -128,8 +129,16 @@ class _FelxHeadState extends State<FelxHead> {
             case USER_SIGN_UP_SCREEN:
               return MaterialPageRoute(
                 builder: (c) => Provider(
-                  create: (context) => SignUpBloc(),
+                  create: (context) => AuthenticationBloc(),
                   child: UserSignUpScreen(),
+                  dispose: (_,bloc) => bloc.dispose(),
+                ),
+              );
+            case USER_LOGIN_SCREEN:
+              return MaterialPageRoute(
+                builder: (c) => Provider(
+                  create: (context) => AuthenticationBloc(),
+                  child: UserLoginScreen(),
                   dispose: (_,bloc) => bloc.dispose(),
                 ),
               );

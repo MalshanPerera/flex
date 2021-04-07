@@ -15,17 +15,10 @@ class FirebaseService extends ServiceManager{
 
   // --- sign in, up and out
   Future<String> signIn(String email, String password) async {
-    UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
-    User user = result.user;
 
-    return user.uid;
-  }
-
-  Future<String> signUp(String email, String password, String name, String gender, String userType) async {
-    UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).onError((error, stackTrace) {
+    UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password).onError((error, stackTrace) {
       SkeletonException exc =  GeneralException(
-        error.toString(), ExceptionTypes.REQUEST_ERROR,
+        error.toString().split("] ").last, ExceptionTypes.REQUEST_ERROR,
       );
       locator<ErrorService>().setError(exc);
 
@@ -34,15 +27,38 @@ class FirebaseService extends ServiceManager{
 
     User user = result.user;
 
-    var x  = _firebaseFirestore.collection('user').doc(user.uid).set({
-      'name': name,
-      'gender': gender,
-      'userType': userType,
+    print(user.uid);
+    return user.uid;
+  }
+
+  Future<String> signUp(String email, String password, String name, String gender, String userType) async {
+
+    UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password).onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString().split("] ").last, ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return null;
     });
 
-    print(x);
-
+    User user = result.user;
     return user.uid;
+  }
+
+  Future<bool> setData({String userId, Map<String, dynamic> map}) async {
+    await _firebaseFirestore.collection('user').doc(userId).set(map).onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return false;
+    });
+
+    print("DATA HAS BEEN SAVED TO THE DATABASE");
+
+    return true;
   }
 
   Future<void> signOut() async {

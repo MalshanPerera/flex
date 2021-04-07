@@ -5,4 +5,5 @@ abstract class UserManager {
 
   Future<int> get getUserId;
 
+  void saveUserId(String uid);
 }

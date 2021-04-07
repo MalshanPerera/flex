@@ -1,5 +1,5 @@
 import 'package:flex/bloc/loading_bloc.dart';
-import 'package:flex/bloc/signUp_bloc.dart';
+import 'package:flex/bloc/authentication_bloc.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_strings.dart';
 import 'package:flex/helper/app_utils.dart';
@@ -19,7 +19,7 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
 
   final GlobalKey<FormState> _key = GlobalKey();
 
-  SignUpBloc _signUpBloc;
+  AuthenticationBloc _authenticationBloc;
   LoadingBloc _loadingBloc;
 
   String email, password, name;
@@ -32,7 +32,7 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
     super.didChangeDependencies();
 
     if(!_isLoaded){
-      _signUpBloc = Provider.of<SignUpBloc>(context);
+      _authenticationBloc = Provider.of<AuthenticationBloc>(context);
       _loadingBloc = Provider.of<LoadingBloc>(context);
       _isLoaded = true;
     }
@@ -130,21 +130,20 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                                 ),
                                 StreamBuilder(
                                   initialData: 0,
-                                  stream: _signUpBloc.genderRadioBtnStream,
+                                  stream: _authenticationBloc.genderRadioBtnStream,
                                   builder: (context, snapshot) {
                                     return Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
                                           child: ListTile(
-                                            tileColor: Colors.red,
                                             contentPadding: EdgeInsets.all(0.0),
                                             leading: Radio(
                                               value: 1,
                                               groupValue: snapshot.data,
                                               onChanged: (value) {
                                                 this.gender = value;
-                                                _signUpBloc.genderRadioBtnSink.add(value);
+                                                _authenticationBloc.genderRadioBtnSink.add(value);
                                               },
                                             ),
                                             title: Text(
@@ -160,7 +159,7 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                                               groupValue: snapshot.data,
                                               onChanged: (value) {
                                                 this.gender = value;
-                                                _signUpBloc.genderRadioBtnSink.add(value);
+                                                _authenticationBloc.genderRadioBtnSink.add(value);
                                               },
                                             ),
                                             title: Text(
@@ -212,43 +211,86 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                         Padding(
                           padding: EdgeInsets.only(top: Utils.getDesignHeight(10)),
                           child: StreamBuilder(
-                            stream: _signUpBloc.userTypeRadioBtnStream,
+                            stream: _authenticationBloc.userTypeRadioBtnStream,
                             initialData: 0,
                             builder: (context, snapshot) {
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              return Column(
                                 children: [
-                                  Expanded(
-                                    child: ListTile(
-                                      leading: Radio(
-                                          value: 1,
-                                          groupValue: snapshot.data,
-                                          onChanged: (value) {
-                                            this.userType = value;
-                                            _signUpBloc.userTypeRadioBtnSink.add(value);
-                                          },
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.all(0.0),
+                                          leading: Radio(
+                                              value: 1,
+                                              groupValue: snapshot.data,
+                                              onChanged: (value) {
+                                                this.userType = value;
+                                                _authenticationBloc.userTypeRadioBtnSink.add(value);
+                                              },
+                                          ),
+                                          title: Text(
+                                            "Achievers",
+                                            style: Theme.of(context).primaryTextTheme.bodyText1,
+                                          ),
+                                        ),
                                       ),
-                                      title: Text(
-                                        "Achievers",
-                                        style: Theme.of(context).primaryTextTheme.bodyText1,
+                                      Expanded(
+                                        child: ListTile(
+                                          leading: Radio(
+                                              value: 2,
+                                              groupValue: snapshot.data,
+                                              onChanged: (value) {
+                                                this.userType = value;
+                                                _authenticationBloc.userTypeRadioBtnSink.add(value);
+                                              },
+                                          ),
+                                          title: Text(
+                                            "Socializer",
+                                            style: Theme.of(context).primaryTextTheme.bodyText1,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                  Expanded(
-                                    child: ListTile(
-                                      leading: Radio(
-                                          value: 2,
-                                          groupValue: snapshot.data,
-                                          onChanged: (value) {
-                                            this.userType = value;
-                                            _signUpBloc.userTypeRadioBtnSink.add(value);
-                                          },
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.all(0.0),
+                                          leading: Radio(
+                                            value: 3,
+                                            groupValue: snapshot.data,
+                                            onChanged: (value) {
+                                              this.userType = value;
+                                              _authenticationBloc.userTypeRadioBtnSink.add(value);
+                                            },
+                                          ),
+                                          title: Text(
+                                            "Explorer",
+                                            style: Theme.of(context).primaryTextTheme.bodyText1,
+                                          ),
+                                        ),
                                       ),
-                                      title: Text(
-                                        "Socializer",
-                                        style: Theme.of(context).primaryTextTheme.bodyText1,
+                                      Expanded(
+                                        child: ListTile(
+                                          leading: Radio(
+                                            value: 4,
+                                            groupValue: snapshot.data,
+                                            onChanged: (value) {
+                                              this.userType = value;
+                                              _authenticationBloc.userTypeRadioBtnSink.add(value);
+                                            },
+                                          ),
+                                          title: Text(
+                                            "Killer",
+                                            style: Theme.of(context).primaryTextTheme.bodyText1,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               );
@@ -284,12 +326,12 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                               if(_key.currentState.validate()){
                                 _key.currentState.save();
                                 FocusScope.of(context).unfocus();
-                                _signUpBloc.signUp(
+                                _authenticationBloc.signUp(
                                   email: this.email,
                                   password: this.password,
                                   name: this.name,
                                   gender: this.gender == 1 ? "Male" : "Female",
-                                  userType: this.userType == 1 ? "Achievers" : "Socializer",
+                                  userType: _userType(userTypeId: this.userType),
                                 );
                               }
                             },
@@ -306,6 +348,27 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
         LoadingBarrier(_loadingBloc.isLoading),
       ],
     );
+  }
+
+  String _userType({int userTypeId}){
+
+    if(userTypeId == 1){
+      return "Achiever";
+    }
+
+    if(userTypeId == 2){
+      return "Socializer";
+    }
+
+    if(userTypeId == 3){
+      return "Explorer";
+    }
+
+    if(userTypeId == 4){
+      return "Killer";
+    }
+
+    return "Non";
   }
 
   _launchURL() async {

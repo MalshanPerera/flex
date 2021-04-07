@@ -15,4 +15,10 @@ class UserService extends UserManager{
     final instance = await SharedPreferences.getInstance();
     return instance.containsKey('userId');
   }
+
+  @override
+  void saveUserId(String userId) async {
+    final instance = await SharedPreferences.getInstance();
+    instance.setString('userId', userId);
+  }
 }

@@ -20,7 +20,7 @@ class DisplayImpl extends DisplayError {
       isDismissible: true,
       duration: Duration(seconds: 3),
       icon: Icon(
-        Icons.check,
+        Icons.error_outline,
         color: Colors.white,
       ),
       mainButton: FlatButton(
