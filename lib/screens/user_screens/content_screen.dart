@@ -1,5 +1,5 @@
 import 'package:flex/helper/app_colors.dart';
-import 'package:flex/screens/home_screen.dart';
+import 'package:flex/screens/user_screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';

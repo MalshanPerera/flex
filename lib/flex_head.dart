@@ -8,7 +8,7 @@ import 'package:flex/bloc/authentication_bloc.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/app_strings.dart';
-import 'package:flex/screens/home_screen.dart';
+import 'package:flex/screens/user_screens/home_screen.dart';
 import 'package:flex/screens/onboarding_screen.dart';
 import 'package:flex/screens/landing_screen.dart';
 import 'package:flex/screens/splash_screen.dart';
