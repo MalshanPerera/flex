@@ -5,9 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService extends UserManager{
 
   @override
-  Future<int> get getUserId async {
+  Future<String> get getUserId async {
     final instance = await SharedPreferences.getInstance();
-    return instance.getInt('userId');
+    return instance.getString('userId');
   }
 
   @override

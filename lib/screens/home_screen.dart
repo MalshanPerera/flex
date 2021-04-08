@@ -1,8 +1,12 @@
+import 'package:flex/bloc/home_screen_bloc.dart';
+import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/helper/app_assets.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_utils.dart';
+import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -28,84 +32,110 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  HomeScreenBloc _homeScreenBloc;
+  LoadingBloc _loadingBloc;
+  bool _isLoaded = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if(!_isLoaded){
+      _homeScreenBloc = Provider.of<HomeScreenBloc>(context);
+      _loadingBloc = Provider.of<LoadingBloc>(context);
+      _homeScreenBloc.getUserData();
+      _isLoaded = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: BACKGROUND_COLOR,
-      child: SafeArea(
-        child: Scaffold(
-          key: _scaffoldKey,
-          backgroundColor: BACKGROUND_COLOR,
-          drawer: Drawer(),
-          body: Padding(
-            padding: EdgeInsets.only(left: Utils.getDesignWidth(26), top: Utils.getDesignHeight(20.0), right: Utils.getDesignWidth(26)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Hello Malshan Perera",
-                          style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 35.0,
+    return Stack(
+      children: [
+        Container(
+          color: BACKGROUND_COLOR,
+          child: SafeArea(
+            child: Scaffold(
+              key: _scaffoldKey,
+              backgroundColor: BACKGROUND_COLOR,
+              drawer: Drawer(),
+              body: Padding(
+                padding: EdgeInsets.only(left: Utils.getDesignWidth(26), top: Utils.getDesignHeight(20.0), right: Utils.getDesignWidth(26)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: StreamBuilder(
+                              stream: _homeScreenBloc.userNameStream,
+                              builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                                return Text(
+                                  snapshot.hasData ? "Hello ${snapshot.data.name}" : "Hello Minh Q.N",
+                                  style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 35.0,
+                                  ),
+                                  overflow: TextOverflow.fade,
+                                );
+                              }
+                            ),
                           ),
-                          overflow: TextOverflow.fade,
+                          CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage:
+                            NetworkImage("https://images.squarespace-cdn.com/content/54b7b93ce4b0a3e130d5d232/1519987165674-QZAGZHQWHWV8OXFW6KRT/icon.png?content-type=image%2Fpng"),
+                            backgroundColor: PRIMARY_COLOR,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      _greeting(),
+                      style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.grey.withOpacity(0.5),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: Utils.getDesignHeight(40.0),),
+                      height: Utils.getDesignHeight(150),
+                      width: double.infinity,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Utils.getDesignHeight(40.0)),
+                      child: Text(
+                        "Categories",
+                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25.0,
+                          color: Colors.black,
                         ),
                       ),
-                      CircleAvatar(
-                        radius: 30.0,
-                        backgroundImage:
-                        NetworkImage("https://images.squarespace-cdn.com/content/54b7b93ce4b0a3e130d5d232/1519987165674-QZAGZHQWHWV8OXFW6KRT/icon.png?content-type=image%2Fpng"),
-                        backgroundColor: PRIMARY_COLOR,
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  _greeting(),
-                  style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: Utils.getDesignHeight(40.0),),
-                  height: Utils.getDesignHeight(150),
-                  width: double.infinity,
-                  color: Colors.deepPurpleAccent,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: Utils.getDesignHeight(40.0)),
-                  child: Text(
-                    "Categories",
-                    style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25.0,
-                      color: Colors.black,
                     ),
-                  ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _categoryList.length,
+                        itemBuilder: (BuildContext context, index){
+                          return _categoriesListTile(
+                            image: _categoryList[index]['image'],
+                            title: _categoryList[index]['title'],
+                          );
+                      }),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _categoryList.length,
-                    itemBuilder: (BuildContext context, index){
-                      return _categoriesListTile(
-                        image: _categoryList[index]['image'],
-                        title: _categoryList[index]['title'],
-                      );
-                  }),
-                ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+        LoadingBarrier(_loadingBloc.isLoading),
+      ],
     );
   }
 

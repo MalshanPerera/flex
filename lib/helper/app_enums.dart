@@ -1,3 +1,10 @@
+enum UserTypes {
+  ACHIEVER,
+  SOCIALIZER,
+  EXPLORER,
+  KILLER,
+}
+
 enum ExceptionTypes {
   TIMEOUT_EXCEPTION,
   SOCKET_EXCEPTION,

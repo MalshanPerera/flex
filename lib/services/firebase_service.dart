@@ -61,6 +61,22 @@ class FirebaseService extends ServiceManager{
     return true;
   }
 
+  Future<DocumentSnapshot> getUserData({String userId}) async {
+
+    DocumentSnapshot doc;
+
+    doc = await _firebaseFirestore.collection('user').doc(userId).get().onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return doc;
+    });
+    
+    return doc;
+  }
+
   Future<void> signOut() async {
     return _firebaseAuth.signOut();
   }

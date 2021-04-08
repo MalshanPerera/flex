@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flex/bloc/home_screen_bloc.dart';
 import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/bloc/onboarding_bloc.dart';
 import 'package:flex/bloc/authentication_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:flex/screens/home_screen.dart';
 import 'package:flex/screens/onboarding_screen.dart';
 import 'package:flex/screens/landing_screen.dart';
 import 'package:flex/screens/splash_screen.dart';
+import 'package:flex/screens/user_screens/content_screen.dart';
 import 'package:flex/screens/user_screens/user_login_screen.dart';
 import 'package:flex/screens/user_screens/user_sigin_up_screen.dart';
 import 'package:flex/service_locator.dart';
@@ -63,6 +65,9 @@ class _FelxHeadState extends State<FelxHead> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<AuthenticationBloc>(
+          create: (_) => AuthenticationBloc(),
+        ),
         Provider<LoadingBloc>(
           create: (_) => LoadingBloc(),
           dispose: (_, bloc) => bloc.dispose(),
@@ -128,23 +133,22 @@ class _FelxHeadState extends State<FelxHead> {
               );
             case USER_SIGN_UP_SCREEN:
               return MaterialPageRoute(
-                builder: (c) => Provider(
-                  create: (context) => AuthenticationBloc(),
-                  child: UserSignUpScreen(),
-                  dispose: (_,bloc) => bloc.dispose(),
-                ),
+                builder: (c) => UserSignUpScreen(),
               );
             case USER_LOGIN_SCREEN:
               return MaterialPageRoute(
-                builder: (c) => Provider(
-                  create: (context) => AuthenticationBloc(),
-                  child: UserLoginScreen(),
-                  dispose: (_,bloc) => bloc.dispose(),
-                ),
+                builder: (c) => UserLoginScreen(),
               );
-            case HOME_SCREEN:
+            case CONTENT_SCREEN:
               return MaterialPageRoute(
-                  builder: (c) => HomeScreen(),
+                builder: (c) => MultiProvider(
+                  providers: [
+                    Provider<HomeScreenBloc>(
+                      create: (context) => HomeScreenBloc(),
+                    )
+                  ],
+                  child: ContentScreen(),
+                ),
               );
             default:
               return MaterialPageRoute(

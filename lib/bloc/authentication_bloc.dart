@@ -10,7 +10,7 @@ import 'package:rxdart/rxdart.dart';
 
 class AuthenticationBloc extends BaseBloc {
 
-  final userService = locator<UserService>();
+  final _userService = locator<UserService>();
   final _eventBus = locator<EventBus>();
 
   BehaviorSubject<int> _genderRadioBtnSubject = BehaviorSubject<int>();
@@ -20,6 +20,15 @@ class AuthenticationBloc extends BaseBloc {
   BehaviorSubject<int> _userTypeRadioBtnSubject = BehaviorSubject<int>();
   Stream<int> get userTypeRadioBtnStream => _userTypeRadioBtnSubject.stream;
   Sink<int> get userTypeRadioBtnSink => _userTypeRadioBtnSubject.sink;
+
+  Future<bool> isUserLoggedIn() async {
+    return await locator<UserService>().isLoggedIn;
+  }
+
+  void checkUserStatusAndNavigate() async {
+    bool loggedIn = await isUserLoggedIn();
+    locator<NavigationService>().pushReplacement(loggedIn ? CONTENT_SCREEN : LANDING_SCREEN);
+  }
 
   void login({String email, String password}) async {
 
@@ -37,7 +46,7 @@ class AuthenticationBloc extends BaseBloc {
         locator<NavigationService>().pushReplacement(HOME_SCREEN);
       }
 
-      userService.saveUserId(uid);
+      _userService.saveUserId(uid);
       print("UUID: $uid");
 
 
@@ -69,7 +78,7 @@ class AuthenticationBloc extends BaseBloc {
         });
       });
 
-      userService.saveUserId(uid);
+      _userService.saveUserId(uid);
       print("UUID: $uid");
 
     }catch(error){
