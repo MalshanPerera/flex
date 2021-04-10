@@ -2,19 +2,24 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flex/bloc/home_screen_bloc.dart';
+import 'package:flex/bloc/leaderboard_bloc.dart';
 import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/bloc/onboarding_bloc.dart';
 import 'package:flex/bloc/authentication_bloc.dart';
+import 'package:flex/bloc/profile_bloc.dart';
+import 'package:flex/bloc/workout_bloc.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/app_strings.dart';
-import 'package:flex/screens/user_screens/home_screen.dart';
 import 'package:flex/screens/onboarding_screen.dart';
 import 'package:flex/screens/landing_screen.dart';
 import 'package:flex/screens/splash_screen.dart';
 import 'package:flex/screens/user_screens/content_screen.dart';
 import 'package:flex/screens/user_screens/user_login_screen.dart';
 import 'package:flex/screens/user_screens/user_sigin_up_screen.dart';
+import 'package:flex/screens/user_screens/workout_screens/abs_screen.dart';
+import 'package:flex/screens/user_screens/workout_screens/arms_screen.dart';
+import 'package:flex/screens/user_screens/workout_screens/full_body_screen.dart';
 import 'package:flex/service_locator.dart';
 import 'package:flex/services/base_managers/exceptions.dart';
 import 'package:flex/services/error_service.dart';
@@ -33,6 +38,10 @@ class _FelxHeadState extends State<FelxHead> {
 
   StreamSubscription _errorSubscription;
   Stream<SkeletonException> _prevErrorStream;
+
+  HomeScreenBloc _homeScreenBloc;
+  LeaderboardBloc _leaderboardBloc;
+  ProfileBloc _profileBloc;
 
   @override
   void initState() {
@@ -144,10 +153,52 @@ class _FelxHeadState extends State<FelxHead> {
                 builder: (c) => MultiProvider(
                   providers: [
                     Provider<HomeScreenBloc>(
-                      create: (context) => HomeScreenBloc(),
-                    )
+                      create: (context) {
+                        _homeScreenBloc = HomeScreenBloc();
+                        return _homeScreenBloc;
+                      },
+                      // dispose: (_,bloc) => bloc.dispose(),
+                    ),
+                    Provider<LeaderboardBloc>(
+                      create: (context) {
+                        _leaderboardBloc = LeaderboardBloc();
+                        return _leaderboardBloc;
+                      },
+                      dispose: (_,bloc) => bloc.dispose(),
+                    ),
+                    Provider<ProfileBloc>(
+                      create: (context) {
+                        _profileBloc = ProfileBloc();
+                        return _profileBloc;
+                      },
+                      dispose: (_,bloc) => bloc.dispose(),
+                    ),
                   ],
                   child: ContentScreen(),
+                ),
+              );
+            case ARMS_WORKOUT_SCREEN:
+              return MaterialPageRoute(
+                builder: (c) => Provider(
+                  create: (context) => WorkoutBloc(),
+                  child: ArmsWorkoutScreen(),
+                  dispose: (_, bloc) => bloc.dispose(),
+                ),
+              );
+            case ABS_WORKOUT_SCREEN:
+              return MaterialPageRoute(
+                builder: (c) => Provider(
+                  create: (context) => WorkoutBloc(),
+                  child: AbsWorkoutScreen(),
+                  dispose: (_, bloc) => bloc.dispose(),
+                ),
+              );
+            case FULL_BODY_WORKOUT_SCREEN:
+              return MaterialPageRoute(
+                builder: (c) => Provider(
+                  create: (context) => WorkoutBloc(),
+                  child: FullBodyWorkoutScreen(),
+                  dispose: (_, bloc) => bloc.dispose(),
                 ),
               );
             default:

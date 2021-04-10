@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flex/helper/app_enums.dart';
 import 'package:flex/helper/models/errors/exceptions.dart';
 import 'package:flex/helper/models/network/initialize_models.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/foundation.dart';
 class FirebaseService extends ServiceManager{
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
   // --- sign in, up and out
   Future<String> signIn(String email, String password) async {
@@ -73,8 +75,39 @@ class FirebaseService extends ServiceManager{
 
       return doc;
     });
-    
+
     return doc;
+  }
+
+  Future<bool> setLeaderboardData({Map<String, dynamic> map}) async {
+    await _firebaseFirestore.collection('leaderboard').doc().set(map).onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return;
+    });
+
+    print("DATA HAS BEEN SAVED TO THE LEADERBOARD");
+
+    return true;
+  }
+
+  Future<QuerySnapshot> getLeaderboardData() async {
+
+    QuerySnapshot snapshot;
+
+    snapshot = await _firebaseFirestore.collection('leaderboard').get().onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return snapshot;
+    });
+
+    return snapshot;
   }
 
   Future<void> signOut() async {

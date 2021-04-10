@@ -49,8 +49,6 @@ class AuthenticationBloc extends BaseBloc {
       _userService.saveUserId(uid);
       print("UUID: $uid");
 
-
-
     }catch(error){
       print(error.toString());
     }
@@ -63,20 +61,29 @@ class AuthenticationBloc extends BaseBloc {
       'name': name,
       'gender': gender,
       'userType': userType,
+      'level': 1,
+      'points': 0,
+      'full_body_progress': 0,
+      'arms_progress': 0,
+      'abs_progress': 0,
+      'achievement': [],
+      'badges': [],
     };
 
     try {
 
       _eventBus.fire(LoadEvent.show());
-      uid = await locator<FirebaseService>().signUp(email, password, name, gender, userType).whenComplete(() {
-        locator<FirebaseService>().setData(userId: uid, map: userData).whenComplete(() {
-          _eventBus.fire(LoadEvent.hide());
-
-          if(uid != null){
-            locator<NavigationService>().pushReplacement(HOME_SCREEN);
-          }
-        });
+      uid = await locator<FirebaseService>().signUp(email, password, name, gender, userType);
+      await locator<FirebaseService>().setData(userId: uid, map: userData);
+      await locator<FirebaseService>().setLeaderboardData(map: {
+        'uid': uid,
+        'name': name,
+        'points': 0,
       });
+      _eventBus.fire(LoadEvent.hide());
+      if(uid != null){
+        locator<NavigationService>().pushReplacement(HOME_SCREEN);
+      }
 
       _userService.saveUserId(uid);
       print("UUID: $uid");

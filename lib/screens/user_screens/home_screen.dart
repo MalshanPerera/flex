@@ -6,6 +6,7 @@ import 'package:flex/helper/app_utils.dart';
 import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -58,7 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Scaffold(
               key: _scaffoldKey,
               backgroundColor: BACKGROUND_COLOR,
-              drawer: Drawer(),
               body: Padding(
                 padding: EdgeInsets.only(left: Utils.getDesignWidth(26), top: Utils.getDesignHeight(20.0), right: Utils.getDesignWidth(26)),
                 child: Column(
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Expanded(
                             child: StreamBuilder(
-                              stream: _homeScreenBloc.userNameStream,
+                              stream: _homeScreenBloc.userDetailsStream,
                               builder: (context, AsyncSnapshot<UserDetails> snapshot) {
                                 return Text(
                                   snapshot.hasData ? "Hello ${snapshot.data.name}" : "Hello Minh Q.N",
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           CircleAvatar(
                             radius: 30.0,
                             backgroundImage:
-                            NetworkImage("https://images.squarespace-cdn.com/content/54b7b93ce4b0a3e130d5d232/1519987165674-QZAGZHQWHWV8OXFW6KRT/icon.png?content-type=image%2Fpng"),
+                            NetworkImage(DEFAULT_AVATAR),
                             backgroundColor: PRIMARY_COLOR,
                           ),
                         ],
@@ -101,11 +101,65 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.grey.withOpacity(0.5),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Utils.getDesignHeight(40.0)),
+                      child: Text(
+                        "Your Progression",
+                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                     Container(
-                      margin: EdgeInsets.only(top: Utils.getDesignHeight(40.0),),
+                      margin: EdgeInsets.only(top: Utils.getDesignHeight(15.0),),
+                      padding: EdgeInsets.only(left: Utils.getDesignWidth(20.0), right: Utils.getDesignWidth(20.0),),
                       height: Utils.getDesignHeight(150),
+                      decoration: BoxDecoration(
+                        color: PRIMARY_COLOR,
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      ),
                       width: double.infinity,
-                      color: Colors.deepPurpleAccent,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          StreamBuilder(
+                            stream: _homeScreenBloc.userDetailsStream,
+                            builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                              return _progressWidget(
+                                title: "Arms Workout",
+                                percent: snapshot.hasData ? snapshot.data.armsProgress : 0.0,
+                                daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.armsProgress : 0.0),
+                              );
+                            }
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: Utils.getDesignHeight(10.0),),
+                            child: StreamBuilder(
+                              stream: _homeScreenBloc.userDetailsStream,
+                              builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                                return _progressWidget(
+                                    title: "Abs Workout",
+                                    percent: snapshot.hasData ? snapshot.data.absProgress : 0.0,
+                                    daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.absProgress : 0.0),
+                                );
+                              }
+                            ),
+                          ),
+                          StreamBuilder(
+                            stream: _homeScreenBloc.userDetailsStream,
+                            builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                              return _progressWidget(
+                                  title: "Full Body Workout",
+                                  percent: snapshot.hasData ? snapshot.data.fullBodyProgress : 0.0,
+                                  daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.fullBodyProgress : 0.0),
+                              );
+                            }
+                          ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: Utils.getDesignHeight(40.0)),
@@ -120,11 +174,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Expanded(
                       child: ListView.builder(
+                        padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0)),
                         itemCount: _categoryList.length,
                         itemBuilder: (BuildContext context, index){
                           return _categoriesListTile(
                             image: _categoryList[index]['image'],
                             title: _categoryList[index]['title'],
+                            index: index,
                           );
                       }),
                     ),
@@ -139,39 +195,134 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _categoriesListTile({String image, String title}){
+  Widget _categoriesListTile({String image, String title, int index}){
+    return GestureDetector(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          boxShadow: [
+            BoxShadow(
+              color: SHADOW_COLOR,
+              offset: Offset(0, 0),
+              blurRadius: 1,
+            ),
+          ],
+        ),
+        margin: const EdgeInsets.only(top: 10.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          child: ListTile(
+            tileColor: Colors.white,
+            contentPadding: EdgeInsets.only(
+              left: Utils.getDesignWidth(10.0),
+              top: Utils.getDesignHeight(5.0),
+              right: Utils.getDesignWidth(10.0),
+              bottom: Utils.getDesignHeight(5.0),
+            ),
+            leading: SvgPicture.asset(
+              image,
+              height: Utils.getDesignHeight(45),
+              width: Utils.getDesignWidth(45),
+            ),
+            title: Text(title),
+            trailing: Icon(Icons.chevron_right_rounded, color: PRIMARY_COLOR,),
+          ),
+        ),
+      ),
+      onTap: () => _homeScreenBloc.navigateToWorkoutScreen(index),
+    );
+  }
+
+  Widget _progressWidget({String title, double percent, String daysLeft}){
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        boxShadow: [
-          BoxShadow(
-            color: SHADOW_COLOR,
-            offset: Offset(0, 0),
-            blurRadius: 1,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0,
+              color: Colors.white,
+            ),
+          ),
+          Column(
+            children: [
+              LinearPercentIndicator(
+                animation: true,
+                animateFromLastPercent: true,
+                animationDuration: 2,
+                width: 140.0,
+                lineHeight: 14.0,
+                percent: percent,
+                linearStrokeCap: LinearStrokeCap.roundAll,
+                backgroundColor: Colors.white,
+                progressColor: PINK,
+              ),
+              Text(
+                "$daysLeft",
+                style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 15.0,
+                  color: Colors.yellow,
+                ),
+              ),
+            ],
           ),
         ],
       ),
-      margin: const EdgeInsets.only(top: 10.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        child: ListTile(
-          tileColor: Colors.white,
-          contentPadding: EdgeInsets.only(
-            left: Utils.getDesignWidth(10.0),
-            top: Utils.getDesignHeight(5.0),
-            right: Utils.getDesignWidth(10.0),
-            bottom: Utils.getDesignHeight(5.0),
-          ),
-          leading: SvgPicture.asset(
-            image,
-            height: Utils.getDesignHeight(45),
-            width: Utils.getDesignWidth(45),
-          ),
-          title: Text(title),
-          trailing: Icon(Icons.chevron_right_rounded, color: PRIMARY_COLOR,),
-        ),
-      ),
     );
+  }
+
+  String _getDaysLeft(double progress){
+
+    String days = "14 Days";
+
+    if(progress == 0.0714){
+      days = "13 Days Left";
+    }
+    if(progress == 0.1428){
+      days = "12 Days Left";
+    }
+    if(progress == 0.2142){
+      days = "11 Days Left";
+    }
+    if(progress == 0.2856){
+      days = "10 Days Left";
+    }
+    if(progress == 0.357){
+      days = "09 Days Left";
+    }
+    if(progress == 0.4284){
+      days = "08 Days Left";
+    }
+    if(progress == 0.4998){
+      days = "07 Days Left";
+    }
+    if(progress == 0.5712){
+      days = "06 Days Left";
+    }
+    if(progress == 0.6426){
+      days = "05 Days Left";
+    }
+    if(progress == 0.714){
+      days = "04 Days Left";
+    }
+    if(progress == 0.7854){
+      days = "03 Days Left";
+    }
+    if(progress == 0.8568){
+      days = "02 Days Left";
+    }
+    if(progress == 0.9282){
+      days = "01 Days Left";
+    }
+    if(progress == 0.9996){
+      days = "Done!!";
+    }
+
+    return days;
   }
 
   String _greeting() {

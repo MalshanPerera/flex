@@ -5,6 +5,11 @@ enum UserTypes {
   KILLER,
 }
 
+enum VideoType{
+  NETWORK,
+  FILE,
+}
+
 enum ExceptionTypes {
   TIMEOUT_EXCEPTION,
   SOCKET_EXCEPTION,
