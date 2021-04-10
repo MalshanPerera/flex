@@ -18,6 +18,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ProfileBloc _profileBloc;
   LoadingBloc _loadingBloc;
 
+  bool _isLoaded = false;
+
   List<String> _ach = ["Complete 14 days Challenge", "Exercise for 5 days Straight", "Exercise for 10 days Straight"];
   List<String> _badges = ["Weight Lost Master", "No Pain No Gain", "Gainz for Dayz", "I am Iron Man"];
 
@@ -25,11 +27,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _profileBloc = Provider.of<ProfileBloc>(context);
-    _loadingBloc = Provider.of<LoadingBloc>(context);
+    if(!_isLoaded){
+      _profileBloc = Provider.of<ProfileBloc>(context);
+      _loadingBloc = Provider.of<LoadingBloc>(context);
 
-    _profileBloc.getUserData();
+      _profileBloc.getUserData();
 
+      _isLoaded = true;
+    }
   }
 
   @override

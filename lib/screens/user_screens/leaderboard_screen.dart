@@ -22,17 +22,22 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
 
   String _uuid;
 
+  bool _isLoaded = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _uuid = FirebaseAuth.instance.currentUser.uid;
+    if(!_isLoaded){
+      _uuid = FirebaseAuth.instance.currentUser.uid;
 
-    _leaderboardBloc = Provider.of<LeaderboardBloc>(context);
-    _loadingBloc = Provider.of<LoadingBloc>(context);
+      _leaderboardBloc = Provider.of<LeaderboardBloc>(context);
+      _loadingBloc = Provider.of<LoadingBloc>(context);
 
-    _leaderboardBloc.getLeaderboardData();
+      _leaderboardBloc.getLeaderboardData();
 
+      _isLoaded = true;
+    }
   }
 
   @override
