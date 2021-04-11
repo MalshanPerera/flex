@@ -68,6 +68,7 @@ class UserDetails {
   double fullBodyProgress;
   double weight;
   double height;
+  int expPoints;
   List<String> achievementsList = [];
   List<String> badgesList = [];
 
@@ -77,11 +78,12 @@ class UserDetails {
     userType = parseJSON['userType'] ?? "";
     level = parseJSON['level'] ?? 1;
     points = parseJSON['points'] ?? 0;
-    absProgress = parseJSON['abs_progress'] ?? 0.0;
-    armsProgress = parseJSON['arms_progress'] ?? 0.0;
-    fullBodyProgress = parseJSON['full_body_progress'] ?? 0.0;
+    absProgress = parseJSON['abs_progress'].toDouble() ?? 0.0;
+    armsProgress = parseJSON['arms_progress'].toDouble() ?? 0.0;
+    fullBodyProgress = parseJSON['full_body_progress'].toDouble() ?? 0.0;
     weight = parseJSON['weight'].toDouble() ?? 0.0;
-    height = parseJSON['height'] ?? 0.0;
+    height = parseJSON['height'].toDouble() ?? 0.0;
+    expPoints = parseJSON['expPoints'] ?? 0;
 
     if (parseJSON['achievements'] != null) {
       parseJSON['achievements'].forEach((achievement){

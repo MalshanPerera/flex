@@ -22,7 +22,7 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
   AuthenticationBloc _authenticationBloc;
   LoadingBloc _loadingBloc;
 
-  String email, password, name;
+  String email, password, name, height, weight;
   int gender, userType;
 
   bool _isLoaded = false;
@@ -119,6 +119,44 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                                       }
                                       return null;
                                     },
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: Utils.getDesignHeight(20)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: Utils.getDesignWidth(150),
+                                        child: CustomTextField(
+                                          keyboardType: TextInputType.number,
+                                          title: "Weight",
+                                          obscureText: true,
+                                          onChange: (weight) => this.weight = weight,
+                                          validator: (text){
+                                            if(text.length == 0){
+                                              return REQUIRED_FIELD;
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        width: Utils.getDesignWidth(150),
+                                        child: CustomTextField(
+                                          keyboardType: TextInputType.number,
+                                          title: "Height",
+                                          obscureText: true,
+                                          onChange: (height) => this.height = height,
+                                          validator: (text){
+                                            if(text.length == 0){
+                                              return REQUIRED_FIELD;
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Padding(
@@ -331,6 +369,8 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                                   password: this.password,
                                   name: this.name,
                                   gender: this.gender == 1 ? "Male" : "Female",
+                                  height: double.parse(this.height),
+                                  weight: double.parse(this.weight),
                                   userType: _userType(userTypeId: this.userType),
                                 );
                               }

@@ -110,6 +110,20 @@ class FirebaseService extends ServiceManager{
     return snapshot;
   }
 
+  Future<bool> setMotivationRate({String uid, Map<String, dynamic> map}) async {
+
+    await _firebaseFirestore.collection('user').doc(uid).update(map).onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return false;
+    });
+
+    return true;
+  }
+
   Future<void> signOut() async {
     return _firebaseAuth.signOut();
   }

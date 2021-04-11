@@ -54,7 +54,7 @@ class AuthenticationBloc extends BaseBloc {
     }
   }
 
-  void signUp({String email, String password, String name, String gender, String userType}) async {
+  void signUp({String email, String password, String name, String gender, double weight, double height, String userType}) async {
 
     String uid;
     Map<String, dynamic> userData = {
@@ -63,11 +63,15 @@ class AuthenticationBloc extends BaseBloc {
       'userType': userType,
       'level': 1,
       'points': 0,
-      'full_body_progress': 0,
-      'arms_progress': 0,
-      'abs_progress': 0,
+      'full_body_progress': 0.0,
+      'arms_progress': 0.0,
+      'abs_progress': 0.0,
       'achievement': [],
       'badges': [],
+      'motivation_rating': [],
+      'weight': weight,
+      'height': height,
+      'expPoints': 0,
     };
 
     try {

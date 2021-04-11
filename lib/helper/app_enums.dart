@@ -10,6 +10,12 @@ enum VideoType{
   FILE,
 }
 
+enum WorkoutType{
+  ARMS,
+  ABS,
+  FULL_BODY,
+}
+
 enum ExceptionTypes {
   TIMEOUT_EXCEPTION,
   SOCKET_EXCEPTION,

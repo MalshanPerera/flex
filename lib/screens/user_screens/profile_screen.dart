@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     overflow: TextOverflow.fade,
                                   ),
                                   Text(
-                                    "Level ${snapshot.data.level}",
+                                    _level(snapshot.data.expPoints) == 10 ? "Platinum Player" : "Level ${_level(snapshot.data.expPoints)}",
                                     style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15.0,
@@ -253,6 +253,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
         LoadingBarrier(_loadingBloc.isLoading),
       ],
     );
+  }
+
+  int _level(int expPoints){
+
+    int level = 1;
+
+    if(expPoints == 30){
+      level = 2;
+    }
+    if(expPoints == 60){
+      level = 3;
+    }
+    if(expPoints == 90){
+      level = 4;
+    }
+    if(expPoints == 120){
+      level = 5;
+    }
+    if(expPoints == 150){
+      level = 6;
+    }
+    if(expPoints == 180){
+      level = 7;
+    }
+    if(expPoints == 210){
+      level = 8;
+    }
+    if(expPoints == 240){
+      level = 9;
+    }
+    if(expPoints >= 270){
+      level = 10;
+    }
+
+    return level;
   }
 
   Widget _noDataWidgets({String text}){
