@@ -70,7 +70,7 @@ class UserDetails {
   double height;
   int expPoints;
   List<String> achievementsList = [];
-  List<String> badgesList = [];
+  List<int> badgesList = [];
 
   UserDetails(Map<String, dynamic> parseJSON){
     name = parseJSON['name'] ?? "";
@@ -85,8 +85,8 @@ class UserDetails {
     height = parseJSON['height'].toDouble() ?? 0.0;
     expPoints = parseJSON['expPoints'] ?? 0;
 
-    if (parseJSON['achievements'] != null) {
-      parseJSON['achievements'].forEach((achievement){
+    if (parseJSON['achievement'] != null) {
+      parseJSON['achievement'].forEach((achievement){
         achievementsList.add(achievement);
       });
     }

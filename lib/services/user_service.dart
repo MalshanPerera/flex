@@ -23,6 +23,12 @@ class UserService extends UserManager{
   }
 
   @override
+  Future<int> get getAchievement async {
+    final instance = await SharedPreferences.getInstance();
+    return instance.getInt('AchievementDayCount');
+  }
+
+  @override
   void saveUserId(String userId) async {
     final instance = await SharedPreferences.getInstance();
     instance.setString('userId', userId);
@@ -32,5 +38,11 @@ class UserService extends UserManager{
   void saveDate(String date) async {
     final instance = await SharedPreferences.getInstance();
     instance.setString('date', date);
+  }
+
+  @override
+  void setAchievement(int count) async {
+    final instance = await SharedPreferences.getInstance();
+    instance.setInt('AchievementDayCount', count);
   }
 }

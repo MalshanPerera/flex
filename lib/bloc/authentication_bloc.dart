@@ -79,7 +79,7 @@ class AuthenticationBloc extends BaseBloc {
       _eventBus.fire(LoadEvent.show());
       uid = await locator<FirebaseService>().signUp(email, password, name, gender, userType);
       await locator<FirebaseService>().setData(userId: uid, map: userData);
-      await locator<FirebaseService>().setLeaderboardData(map: {
+      await locator<FirebaseService>().setLeaderboardData(uid: uid, map: {
         'uid': uid,
         'name': name,
         'points': 0,

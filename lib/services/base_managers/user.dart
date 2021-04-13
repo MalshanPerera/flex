@@ -7,7 +7,11 @@ abstract class UserManager {
 
   Future<String> get getUserId;
 
+  Future<int> get getAchievement;
+
   void saveUserId(String uid);
 
   void saveDate(String date);
+
+  void setAchievement(int count);
 }

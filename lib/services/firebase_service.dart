@@ -79,8 +79,8 @@ class FirebaseService extends ServiceManager{
     return doc;
   }
 
-  Future<bool> setLeaderboardData({Map<String, dynamic> map}) async {
-    await _firebaseFirestore.collection('leaderboard').doc().set(map).onError((error, stackTrace) {
+  Future<bool> setLeaderboardData({String uid, Map<String, dynamic> map}) async {
+    await _firebaseFirestore.collection('leaderboard').doc(uid).set(map).onError((error, stackTrace) {
       SkeletonException exc =  GeneralException(
         error.toString(), ExceptionTypes.REQUEST_ERROR,
       );
@@ -90,6 +90,21 @@ class FirebaseService extends ServiceManager{
     });
 
     print("DATA HAS BEEN SAVED TO THE LEADERBOARD");
+
+    return true;
+  }
+
+  Future<bool> updateLeaderboardData({String uid, Map<String, dynamic> map}) async {
+    await _firebaseFirestore.collection('leaderboard').doc(uid).update(map).onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return;
+    });
+
+    print("DATA HAS BEEN UPDATED TO THE LEADERBOARD");
 
     return true;
   }
@@ -111,6 +126,34 @@ class FirebaseService extends ServiceManager{
   }
 
   Future<bool> setMotivationRate({String uid, Map<String, dynamic> map}) async {
+
+    await _firebaseFirestore.collection('user').doc(uid).update(map).onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return false;
+    });
+
+    return true;
+  }
+
+  Future<bool> setAchievement({String uid, Map<String, dynamic> map}) async {
+
+    await _firebaseFirestore.collection('user').doc(uid).update(map).onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return false;
+    });
+
+    return true;
+  }
+
+  Future<bool> setBadges({String uid, Map<String, dynamic> map}) async {
 
     await _firebaseFirestore.collection('user').doc(uid).update(map).onError((error, stackTrace) {
       SkeletonException exc =  GeneralException(

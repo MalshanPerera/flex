@@ -1,4 +1,3 @@
-const String SPLASH_SCREEN = '/splash_screen';
 const String LANDING_SCREEN = '/landing_screen';
 const String ON_BOARDING_SCREEN = '/on_boarding_screen';
 

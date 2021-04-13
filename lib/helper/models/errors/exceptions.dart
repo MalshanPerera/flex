@@ -1,4 +1,4 @@
-import 'package:firebase_auth_platform_interface/src/firebase_auth_exception.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex/helper/app_enums.dart';
 import 'package:flex/services/base_managers/exceptions.dart';
 
@@ -15,6 +15,5 @@ class GeneralException implements SkeletonException {
   @override
   String toString() => this.message;
 
-  @override
   FirebaseAuthException firebaseAuthException;
 }

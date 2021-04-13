@@ -114,8 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.only(top: Utils.getDesignHeight(15.0),),
-                      padding: EdgeInsets.only(left: Utils.getDesignWidth(20.0), right: Utils.getDesignWidth(20.0),),
-                      height: Utils.getDesignHeight(150),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Utils.getDesignWidth(20.0),
+                        vertical: Utils.getDesignWidth(15.0),),
                       decoration: BoxDecoration(
                         color: PRIMARY_COLOR,
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -263,7 +264,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 "$daysLeft",
                 style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                  // fontWeight: FontWeight.bold,
                   fontSize: 15.0,
                   color: Colors.yellow,
                 ),
@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String _getDaysLeft(double progress){
 
-    String days = "14 Days";
+    String days = "14 Days Left";
 
     if(progress == 0.0714){
       days = "13 Days Left";

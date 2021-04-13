@@ -11,3 +11,9 @@ const String GOLD = 'assets/images/gold.svg';
 const String SILVER = 'assets/images/silver.svg';
 const String BROWNS = 'assets/images/browns.svg';
 
+const String FIRST_DAY = 'assets/images/first_day.svg';
+const String FIVE_DAY = 'assets/images/five_days.svg';
+const String TEN_DAY = 'assets/images/ten_days.svg';
+const String FINISH = 'assets/images/finish.svg';
+
+const String LEADERBOARD = 'assets/images/leaderboard.svg';

@@ -1,9 +1,11 @@
+import 'package:flex/bloc/landing_screen_bloc.dart';
 import 'package:flex/helper/app_assets.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -65,7 +67,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     color: PRIMARY_COLOR
                   ),
                 ),
-                onPressed: () => Navigator.pushNamed(context, USER_LOGIN_SCREEN),
+                onPressed: () => Provider.of<LandingScreenBloc>(context, listen: false).navigateToLogin(),
               ),
             ),
             Container(
@@ -93,7 +95,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       color: PRIMARY_COLOR
                   ),
                 ),
-                onPressed: () => Navigator.pushNamed(context, USER_SIGN_UP_SCREEN),
+                onPressed: () => Provider.of<LandingScreenBloc>(context, listen: false).navigateToRegister(),
               ),
             ),
           ],

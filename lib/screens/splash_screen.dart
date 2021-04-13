@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flex/bloc/authentication_bloc.dart';
 import 'package:flex/helper/app_colors.dart';
-import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +44,5 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void navigationPage() {
     Provider.of<AuthenticationBloc>(context, listen: false).checkUserStatusAndNavigate();
-    // Navigator.pushReplacementNamed(context, LANDING_SCREEN);
   }
 }

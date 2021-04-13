@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flex/bloc/home_screen_bloc.dart';
+import 'package:flex/bloc/landing_screen_bloc.dart';
 import 'package:flex/bloc/leaderboard_bloc.dart';
 import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/bloc/onboarding_bloc.dart';
@@ -125,8 +126,8 @@ class _FelxHeadState extends State<FelxHead> {
               ),
             )
         ),
-        initialRoute: SPLASH_SCREEN,
-        onGenerateRoute: (routeSettings){
+        initialRoute: '/',
+        onGenerateRoute: (routeSettings) {
           switch (routeSettings.name) {
             case ON_BOARDING_SCREEN:
               return MaterialPageRoute(
@@ -138,7 +139,11 @@ class _FelxHeadState extends State<FelxHead> {
               );
             case LANDING_SCREEN:
               return MaterialPageRoute(
-                builder: (c) => LandingScreen(),
+                builder: (c) => Provider(
+                  create: (context) => LandingScreenBloc(),
+                  child: LandingScreen(),
+                  dispose: (_,bloc) => bloc.dispose(),
+                ),
               );
             case USER_SIGN_UP_SCREEN:
               return MaterialPageRoute(
