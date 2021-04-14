@@ -37,6 +37,12 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
   }
 
   @override
+  void dispose() {
+    _key.currentState?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
