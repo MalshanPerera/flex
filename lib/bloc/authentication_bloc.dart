@@ -79,6 +79,7 @@ class AuthenticationBloc extends BaseBloc {
       'weight': weight,
       'height': height,
       'expPoints': 0,
+      'step': 0,
     };
 
     try {

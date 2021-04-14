@@ -68,6 +68,7 @@ class WorkoutBloc extends BaseBloc {
     double progress = 0.0;
     int expPoints = 0;
     int points = 0;
+    int step = 0;
     List<double> rates = [];
 
     String _uuid = await _userService.getUserId;
@@ -77,7 +78,7 @@ class WorkoutBloc extends BaseBloc {
 
     progress = workoutType == WorkoutType.ABS ? doc.data()["abs_progress"].toDouble() : workoutType == WorkoutType.ARMS ? doc.data()["arms_progress"].toDouble() : doc.data()["full_body_progress"].toDouble();
     progress = doc.data()["expPoints"].toDouble();
-    // progress = doc.data()["points"];
+    step = doc.data()["step"];
 
     doc.data()["motivation_rating"].forEach((rate){
       rates.add(rate);
@@ -100,6 +101,7 @@ class WorkoutBloc extends BaseBloc {
       '${workoutType == WorkoutType.ABS ? 'abs_progress' : workoutType == WorkoutType.ARMS ? 'arms_progress' : 'full_body_progress'}': progress + 0.0714,
       'expPoints': expPoints + 10,
       'points': points + 10,
+      'step': step + 1,
     });
     _eventBus.fire(LoadEvent.hide());
 

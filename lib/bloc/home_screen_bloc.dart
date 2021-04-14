@@ -84,6 +84,7 @@ class UserDetails {
   double weight;
   double height;
   int expPoints;
+  int step;
   List<String> achievementsList = [];
   List<int> badgesList = [];
 
@@ -99,6 +100,7 @@ class UserDetails {
     weight = parseJSON['weight'].toDouble() ?? 0.0;
     height = parseJSON['height'].toDouble() ?? 0.0;
     expPoints = parseJSON['expPoints'] ?? 0;
+    step = parseJSON['step'] ?? 0;
 
     if (parseJSON['achievement'] != null) {
       parseJSON['achievement'].forEach((achievement){

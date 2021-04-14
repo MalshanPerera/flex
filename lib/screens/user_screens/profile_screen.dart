@@ -9,6 +9,7 @@ import 'package:flex/helper/app_utils.dart';
 import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:im_stepper/stepper.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -245,6 +246,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                         ),
                       ) : Container(),
+                      _appData.userTypes != UserTypes.SOCIALIZER || _appData.userTypes != UserTypes.EXPLORER ? Padding(
+                        padding: EdgeInsets.only(top: Utils.getDesignHeight(30.0),),
+                        child: Text(
+                          "Story Line",
+                          style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ) : Container(),
+                      _appData.userTypes != UserTypes.SOCIALIZER || _appData.userTypes != UserTypes.EXPLORER ? Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.withOpacity(0.5))
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: Utils.getDesignHeight(10.0),
+                          horizontal: Utils.getDesignWidth(10.0),
+                        ),
+                        margin: EdgeInsets.only(top: Utils.getDesignHeight(10.0),),
+                        child: Text(
+                          "Godzila has declared war against you. It is the king of monsters. To battle him finish the 14 day challenge or you will be crushed by Godzila",
+                          style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                            fontSize: 14.0,
+                            color: PRIMARY_COLOR,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ) : Container(),
+                      _appData.userTypes != UserTypes.SOCIALIZER || _appData.userTypes != UserTypes.EXPLORER ? StreamBuilder(
+                        stream: _profileBloc.userDetailsStream,
+                        builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+
+                          if(snapshot.hasData){
+                            if(snapshot.data.step == 13){
+                              return Container(
+                                color: Colors.green,
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: Utils.getDesignHeight(15)
+                                ),
+                                child: Text(
+                                  "Story Completed",
+                                  style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              );
+                            }else{
+                              return _storyWidget(
+                                activeStep: snapshot.data.step,
+                              );
+                            }
+                          }else{
+                            return Container();
+                          }
+                        }
+                      ) : Container(),
                     ],
                   ),
                 ),
@@ -257,13 +318,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _refreshNavigator() async {
+  Widget _storyWidget({int activeStep}){
+    return Container(
+      child: IconStepper(
+        activeStepBorderColor: Colors.deepPurpleAccent,
+        activeStepColor: PRIMARY_COLOR,
+        icons: [
+          activeStep == 0 ? Icon(Icons.forward, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 1 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 2 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 2 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 3 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 3 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 4 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 4 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 5 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 5 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 6 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 6 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 7 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 7 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 8 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 8 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 9 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 9 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 10 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 10 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 11 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 11 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 12 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 12 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 13 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+          activeStep == 13 ? Icon(Icons.forward, color: Colors.white,) : activeStep < 14 ? Icon(Icons.clear, color: Colors.white,) : Icon(Icons.done_outline_rounded, color: Colors.white,),
+        ],
+        activeStep: activeStep,
+        onStepReached: (index) {
+          setState(() {});
+        },
+      ),
+    );
 
-    var response = await _profileBloc.navigateToEditScreen();
-
-    if((response != null && response) || response == null){
-      _profileBloc.getUserData();
-    }
   }
 
   int _level(int expPoints){
@@ -417,5 +499,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ) : Container(),
       ],
     );
+  }
+
+  void _refreshNavigator() async {
+
+    var response = await _profileBloc.navigateToEditScreen();
+
+    if((response != null && response) || response == null){
+      _profileBloc.getUserData();
+    }
   }
 }
