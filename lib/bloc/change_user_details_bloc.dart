@@ -43,11 +43,10 @@ class ChangeUserDetailsBloc extends BaseBloc {
 
   }
 
-  void changeUserDetails({String name, String gender, double weight, double height, String userType}) async {
+  void changeUserDetails({String name, double weight, double height, String userType}) async {
 
     Map<String, dynamic> userData = {
       'name': name,
-      'gender': gender,
       'userType': userType,
       'weight': weight,
       'height': height,

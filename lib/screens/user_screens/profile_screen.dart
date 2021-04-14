@@ -241,19 +241,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                         ),
                       ),
-                      // StreamBuilder(
-                      //   stream: _profileBloc.userDetailsStream,
-                      //   builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                      //     return snapshot.hasData && snapshot.data.achievementsList.isNotEmpty ? SingleChildScrollView(
-                      //       scrollDirection: Axis.horizontal,
-                      //       child: Row(
-                      //         children: snapshot.data.achievementsList.map((id) {
-                      //           return _achievementBadgesWidget(id);
-                      //         }).toList(),
-                      //       ),
-                      //     ) :_noDataWidgets(text: "No Achievements");
-                      //   }
-                      // ),
                     ],
                   ),
                 ),
