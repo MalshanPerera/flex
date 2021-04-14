@@ -69,11 +69,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     size: 25.0,
                                   ),
                                 ),
-                                CircleAvatar(
-                                  radius: 70.0,
-                                  backgroundImage:
-                                  NetworkImage(DEFAULT_AVATAR),
-                                  backgroundColor: Colors.white,
+                                Stack(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 70.0,
+                                      backgroundImage:
+                                      NetworkImage(DEFAULT_AVATAR),
+                                      backgroundColor: Colors.white,
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: GestureDetector(
+                                        child: CircleAvatar(
+                                          radius: 18.0,
+                                          child: Icon(Icons.edit),
+                                          backgroundColor: Colors.white,
+                                        ),
+                                        onTap: () {
+                                          _refreshNavigator();
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 GestureDetector(
                                   child: Container(
@@ -107,6 +125,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                     Text(
                                       _level(snapshot.data.expPoints) == 10 ? "Platinum Player" : "Level ${_level(snapshot.data.expPoints)}",
+                                      style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
+                                      ),
+                                      overflow: TextOverflow.fade,
+                                    ),
+                                    _exp(snapshot.data.expPoints).contains("Full") ? Container() : Text(
+                                      _exp(snapshot.data.expPoints),
                                       style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15.0,
@@ -240,6 +266,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _refreshNavigator() async {
+
+    var response = await _profileBloc.navigateToEditScreen();
+
+    if((response != null && response) || response == null){
+      _profileBloc.getUserData();
+    }
+  }
+
   int _level(int expPoints){
 
     int level = 1;
@@ -270,6 +305,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     if(expPoints >= 270){
       level = 10;
+    }
+
+    return level;
+  }
+
+  String _exp(int expPoints){
+
+    String level = "$expPoints/30";
+
+
+    if(expPoints > 30 && expPoints < 60){
+      level = "$expPoints/60";
+    }
+    if(expPoints > 60 && expPoints < 90){
+      level = "$expPoints/90";
+    }
+    if(expPoints > 90 && expPoints < 120){
+      level = "$expPoints/120";
+    }
+    if(expPoints > 120 && expPoints < 150){
+      level = "$expPoints/150";
+    }
+    if(expPoints > 150 && expPoints < 180){
+      level = "$expPoints/180";
+    }
+    if(expPoints > 180 && expPoints < 210){
+      level = "$expPoints/210";
+    }
+    if(expPoints > 210 && expPoints < 240){
+      level = "$expPoints/240";
+    }
+    if(expPoints > 240 && expPoints < 270){
+      level = "$expPoints/270";
+    }
+    if(expPoints >= 270){
+      level = "Full";
     }
 
     return level;

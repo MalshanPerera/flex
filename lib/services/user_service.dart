@@ -45,4 +45,10 @@ class UserService extends UserManager{
     final instance = await SharedPreferences.getInstance();
     instance.setInt('AchievementDayCount', count);
   }
+
+  @override
+  Future<bool> clear() async {
+    final instance = await SharedPreferences.getInstance();
+    return instance.clear();
+  }
 }

@@ -77,7 +77,6 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                           padding: EdgeInsets.only(top: Utils.getDesignHeight(15)),
                           child: Form(
                             key: _key,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -131,7 +130,6 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                                         child: CustomTextField(
                                           keyboardType: TextInputType.number,
                                           title: "Weight",
-                                          obscureText: true,
                                           onChange: (weight) => this.weight = weight,
                                           validator: (text){
                                             if(text.length == 0){
@@ -146,7 +144,6 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                                         child: CustomTextField(
                                           keyboardType: TextInputType.number,
                                           title: "Height",
-                                          obscureText: true,
                                           onChange: (height) => this.height = height,
                                           validator: (text){
                                             if(text.length == 0){

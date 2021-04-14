@@ -19,17 +19,22 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     {
       'imagePath': 'assets/images/logo.png',
       'description':
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'Welcome to Flex Fitness Application\nThis application is adapted to the user type you got from the test previously.',
     },
     {
       'imagePath': 'assets/images/logo.png',
       'description':
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'It has 3 Categories. Full Body Workout, Arms Workout & Abs Workout.\nPoints will be added when you complete a workout and it will determine your place in the leaderboard.',
     },
     {
       'imagePath': 'assets/images/logo.png',
       'description':
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'Other Gamification elements(Level, Progress, Achievements & Badges) will various according to the selected user type.',
+    },
+    {
+      'imagePath': 'assets/images/logo.png',
+      'description':
+      'Enjoy!!\nWelcome to Flex',
     },
   ];
 
@@ -86,7 +91,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     initialData: 0,
                     builder: (context, AsyncSnapshot<int> snapshot) {
                       return DotsIndicator(
-                        dotsCount: 3,
+                        dotsCount: 4,
                         decorator: DotsDecorator(
                           color: Colors.deepPurpleAccent,
                           activeColor: Colors.white,
@@ -103,7 +108,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     builder: (context, AsyncSnapshot<int> snapshot) {
                       return _getStartedButton(
                         position: snapshot.data ?? 0,
-                        onTap: snapshot.data != 2 ? () {} : () {
+                        onTap: snapshot.data != 3 ? () {} : () {
                           _onBoardingBloc.navigateToHomeScreen();
                         },
                       );
@@ -152,7 +157,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           Utils.getDesignHeight(10),
         ),
         decoration: BoxDecoration(
-            color: position != 2 ? Colors.grey : Colors.white,
+            color: position != 3 ? Colors.grey : Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20.0),),
             boxShadow: [
               BoxShadow(

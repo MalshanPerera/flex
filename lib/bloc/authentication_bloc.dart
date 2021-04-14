@@ -27,7 +27,7 @@ class AuthenticationBloc extends BaseBloc {
 
   void checkUserStatusAndNavigate() async {
     bool loggedIn = await isUserLoggedIn();
-    locator<NavigationService>().pushReplacement(loggedIn ? CONTENT_SCREEN : LANDING_SCREEN);
+    locator<NavigationService>().pushReplacementUtil(loggedIn ? CONTENT_SCREEN : LANDING_SCREEN);
   }
 
   void login({String email, String password}) async {
@@ -43,7 +43,7 @@ class AuthenticationBloc extends BaseBloc {
 
       // Uid gets null inside the whenComplete
       if(uid != null){
-        locator<NavigationService>().pushReplacement(HOME_SCREEN);
+        locator<NavigationService>().pushReplacementUtil(HOME_SCREEN);
       }
 
       _userService.saveUserId(uid);
@@ -86,7 +86,7 @@ class AuthenticationBloc extends BaseBloc {
       });
       _eventBus.fire(LoadEvent.hide());
       if(uid != null){
-        locator<NavigationService>().pushReplacement(HOME_SCREEN);
+        locator<NavigationService>().pushReplacementUtil(ON_BOARDING_SCREEN);
       }
 
       _userService.saveUserId(uid);

@@ -1,7 +1,6 @@
 import 'package:flex/bloc/landing_screen_bloc.dart';
 import 'package:flex/helper/app_assets.dart';
 import 'package:flex/helper/app_colors.dart';
-import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

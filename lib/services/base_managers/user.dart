@@ -14,4 +14,6 @@ abstract class UserManager {
   void saveDate(String date);
 
   void setAchievement(int count);
+
+  void clear();
 }

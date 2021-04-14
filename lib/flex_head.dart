@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flex/bloc/change_user_details_bloc.dart';
 import 'package:flex/bloc/home_screen_bloc.dart';
 import 'package:flex/bloc/landing_screen_bloc.dart';
 import 'package:flex/bloc/leaderboard_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:flex/helper/app_strings.dart';
 import 'package:flex/screens/onboarding_screen.dart';
 import 'package:flex/screens/landing_screen.dart';
 import 'package:flex/screens/splash_screen.dart';
+import 'package:flex/screens/user_screens/change_user_details_screen.dart';
 import 'package:flex/screens/user_screens/content_screen.dart';
 import 'package:flex/screens/user_screens/user_login_screen.dart';
 import 'package:flex/screens/user_screens/user_sigin_up_screen.dart';
@@ -126,7 +128,7 @@ class _FelxHeadState extends State<FelxHead> {
               ),
             )
         ),
-        initialRoute: '/',
+        // initialRoute: SPLASH_SCREEN,
         onGenerateRoute: (routeSettings) {
           switch (routeSettings.name) {
             case ON_BOARDING_SCREEN:
@@ -142,7 +144,6 @@ class _FelxHeadState extends State<FelxHead> {
                 builder: (c) => Provider(
                   create: (context) => LandingScreenBloc(),
                   child: LandingScreen(),
-                  dispose: (_,bloc) => bloc.dispose(),
                 ),
               );
             case USER_SIGN_UP_SCREEN:
@@ -162,7 +163,7 @@ class _FelxHeadState extends State<FelxHead> {
                         _homeScreenBloc = HomeScreenBloc();
                         return _homeScreenBloc;
                       },
-                      // dispose: (_,bloc) => bloc.dispose(),
+                      dispose: (_,bloc) => bloc.dispose(),
                     ),
                     Provider<LeaderboardBloc>(
                       create: (context) {
@@ -203,6 +204,14 @@ class _FelxHeadState extends State<FelxHead> {
                 builder: (c) => Provider(
                   create: (context) => WorkoutBloc(),
                   child: FullBodyWorkoutScreen(),
+                  dispose: (_, bloc) => bloc.dispose(),
+                ),
+              );
+            case CHANGE_USER_DETAILS_SCREEN:
+              return MaterialPageRoute(
+                builder: (c) => Provider(
+                  create: (context) => ChangeUserDetailsBloc(),
+                  child: ChangeUserDetailsScreen(),
                   dispose: (_, bloc) => bloc.dispose(),
                 ),
               );

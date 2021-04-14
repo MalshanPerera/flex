@@ -8,12 +8,15 @@ import 'package:flex/service_locator.dart';
 import 'package:flex/services/base_managers/exceptions.dart';
 import 'package:flex/services/base_managers/network.dart';
 import 'package:flex/services/error_service.dart';
+import 'package:flex/services/user_service.dart';
 import 'package:flutter/foundation.dart';
 
 class FirebaseService extends ServiceManager{
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+
+  final _userService = locator<UserService>();
 
   // --- sign in, up and out
   Future<String> signIn(String email, String password) async {
@@ -59,6 +62,21 @@ class FirebaseService extends ServiceManager{
     });
 
     print("DATA HAS BEEN SAVED TO THE DATABASE");
+
+    return true;
+  }
+
+  Future<bool> updateUserData({String userId, Map<String, dynamic> map}) async {
+    await _firebaseFirestore.collection('user').doc(userId).update(map).onError((error, stackTrace) {
+      SkeletonException exc =  GeneralException(
+        error.toString(), ExceptionTypes.REQUEST_ERROR,
+      );
+      locator<ErrorService>().setError(exc);
+
+      return false;
+    });
+
+    print("DATA HAS BEEN UPDATED IN THE DATABASE");
 
     return true;
   }

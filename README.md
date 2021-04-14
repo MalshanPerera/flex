@@ -2,9 +2,9 @@
 
 Enhance user engagement in physical activity application using adaptive gamification
 
-Killer - Leaderboard and Points elements
-Achiever - Level and Point elements triggered the Progression
-Explorer - Level, Story, Badge and Achievement
+Killer - Level, Leaderboard and Points elements
+Achiever - Level, Leaderboard, Achievement and Point elements triggered the Progression
+Explorer - Level triggered the Progression, Story, Badge and Achievement
 Socializer - Story, Badge and Achievement elements
 
 ## Getting Started

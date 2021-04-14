@@ -33,6 +33,10 @@ class ProfileBloc extends BaseBloc {
     print(doc.data());
   }
 
+  Future<dynamic> navigateToEditScreen() async {
+    return locator<NavigationService>().pushNamed(CHANGE_USER_DETAILS_SCREEN);
+  }
+
   void logout() async {
     await locator<FirebaseService>().signOut().then((value) {
       locator<NavigationService>().pushReplacement(LANDING_SCREEN);

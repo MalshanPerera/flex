@@ -14,10 +14,11 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
     _loadScreen();
+
   }
 
   @override
@@ -38,11 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _loadScreen() async {
-    var _duration = Duration(seconds: 3);
-    return Timer(_duration, navigationPage);
-  }
-
-  void navigationPage() {
+    await Future.delayed(Duration(seconds: 3));
     Provider.of<AuthenticationBloc>(context, listen: false).checkUserStatusAndNavigate();
   }
 }
