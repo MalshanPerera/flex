@@ -5,6 +5,7 @@ import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_utils.dart';
 import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -20,16 +21,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Map<String, dynamic>> _categoryList = [
     {
+      'image': FULL_BODY_WORKOUT,
+      'title': 'Full Body Workout',
+    },
+    {
       'image': ARMS_WORKOUT,
       'title': 'Arms Workout',
     },
     {
       'image': ABS_WORKOUT,
       'title': 'Abs Workout',
-    },
-    {
-      'image': FULL_BODY_WORKOUT,
-      'title': 'Full Body Workout',
     },
   ];
 

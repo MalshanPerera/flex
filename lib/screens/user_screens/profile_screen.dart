@@ -3,6 +3,8 @@ import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/bloc/profile_bloc.dart';
 import 'package:flex/helper/app_assets.dart';
 import 'package:flex/helper/app_colors.dart';
+import 'package:flex/helper/app_data.dart';
+import 'package:flex/helper/app_enums.dart';
 import 'package:flex/helper/app_utils.dart';
 import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   LoadingBloc _loadingBloc;
 
   bool _isLoaded = false;
+
+  final _appData = AppData.getInstance; //singleton network instance
 
   @override
   void didChangeDependencies() {
@@ -110,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ],
                             ),
-                            StreamBuilder(
+                            _appData.userTypes != UserTypes.SOCIALIZER ? StreamBuilder(
                               stream: _profileBloc.userDetailsStream,
                               builder: (context, AsyncSnapshot<UserDetails> snapshot) {
                                 return snapshot.hasData ? Column(
@@ -142,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ],
                                 ) : Container();
                               }
-                            ),
+                            ) : Container(),
                           ],
                         ),
                       ),
@@ -221,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ),
-                      Padding(
+                      _appData.userTypes != UserTypes.KILLER ? Padding(
                         padding: EdgeInsets.only(top: Utils.getDesignHeight(30.0),),
                         child: Text(
                           "Achievements & Badges",
@@ -231,8 +235,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Colors.black,
                           ),
                         ),
-                      ),
-                      Padding(
+                      ) : Container(),
+                      _appData.userTypes != UserTypes.KILLER ? Padding(
                         padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0),),
                         child: StreamBuilder(
                           stream: _profileBloc.userDetailsStream,
@@ -240,7 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             return _achievementBadgesWidget(snapshot.hasData ? snapshot.data.achievementsList : []);
                           }
                         ),
-                      ),
+                      ) : Container(),
                     ],
                   ),
                 ),

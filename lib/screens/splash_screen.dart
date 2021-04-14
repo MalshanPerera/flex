@@ -17,8 +17,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _loadScreen();
+    Provider.of<AuthenticationBloc>(context).getUserData();
 
+    _loadScreen();
   }
 
   @override

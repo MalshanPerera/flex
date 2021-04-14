@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flex/bloc/base_bloc.dart';
+import 'package:flex/helper/app_data.dart';
+import 'package:flex/helper/app_enums.dart';
 import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/load_events.dart';
 import 'package:flex/service_locator.dart';
@@ -10,8 +13,12 @@ import 'package:rxdart/rxdart.dart';
 
 class AuthenticationBloc extends BaseBloc {
 
+  final _appData = AppData.getInstance; //singleton network instance
+
   final _userService = locator<UserService>();
   final _eventBus = locator<EventBus>();
+
+  String _uuid;
 
   BehaviorSubject<int> _genderRadioBtnSubject = BehaviorSubject<int>();
   Stream<int> get genderRadioBtnStream => _genderRadioBtnSubject.stream;
@@ -94,6 +101,26 @@ class AuthenticationBloc extends BaseBloc {
 
     }catch(error){
       print(error.toString());
+    }
+  }
+
+  void getUserData() async {
+
+    _uuid = await _userService.getUserId;
+
+    DocumentSnapshot doc = await locator<FirebaseService>().getUserData(userId: _uuid);
+
+    if(doc.data()['userType'] == "Achiever"){
+      _appData.userTypes = UserTypes.ACHIEVER;
+    }
+    if(doc.data()['userType'] == "Socializer"){
+      _appData.userTypes = UserTypes.SOCIALIZER;
+    }
+    if(doc.data()['userType'] == "Explorer"){
+      _appData.userTypes = UserTypes.EXPLORER;
+    }
+    if(doc.data()['userType'] == "Killer"){
+      _appData.userTypes = UserTypes.KILLER;
     }
   }
 

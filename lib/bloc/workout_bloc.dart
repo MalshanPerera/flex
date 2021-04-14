@@ -47,11 +47,16 @@ class WorkoutBloc extends BaseBloc {
 
     String setDate = await _userService.getDate;
 
-    if(dateNow == setDate || setDate != null){
+    if(dateNow.contains(setDate ?? "") && setDate != null){
       setIsDateTrueSink.add(true);
+
     }else{
       setIsDateTrueSink.add(false);
     }
+  }
+
+  void navigateToHomeScreenPop(){
+    locator<NavigationService>().pop();
   }
 
   void navigateToHomeScreen(){
@@ -97,6 +102,8 @@ class WorkoutBloc extends BaseBloc {
       'points': points + 10,
     });
     _eventBus.fire(LoadEvent.hide());
+
+    locator<NavigationService>().pushReplacement(HOME_SCREEN);
   }
 
   void getAchievements() async {

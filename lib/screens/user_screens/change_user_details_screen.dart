@@ -285,13 +285,15 @@ class _ChangeUserDetailsScreenState extends State<ChangeUserDetailsScreen > {
                                 ),
                                 onPressed: () {
                                   if(_key.currentState.validate()){
+                                    print(_userType(userTypeId: _userTypeInt(oldSnapshot.data.userType)));
+                                    print(_userType(userTypeId: this.userType));
                                     _key.currentState.save();
                                     FocusScope.of(context).unfocus();
                                     _changeUserDetailsBloc.changeUserDetails(
                                       name: this.name ?? "${oldSnapshot.data.name}",
                                       height: double.parse(this.height ?? "${oldSnapshot.data.height}"),
                                       weight: double.parse(this.weight ?? "${oldSnapshot.data.weight}"),
-                                      userType: _userType(userTypeId: this.userType ??_userType(userTypeId: _userTypeInt(oldSnapshot.data.userType))),
+                                      userType: _userType(userTypeId: this.userType) == "Non" ? _userType(userTypeId: _userTypeInt(oldSnapshot.data.userType)) : _userType(userTypeId: this.userType),
                                     );
                                   }
                                 },

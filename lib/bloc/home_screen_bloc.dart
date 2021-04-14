@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flex/bloc/base_bloc.dart';
+import 'package:flex/helper/app_data.dart';
+import 'package:flex/helper/app_enums.dart';
 import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/load_events.dart';
 import 'package:flex/service_locator.dart';
@@ -10,6 +12,8 @@ import 'package:flex/services/user_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreenBloc extends BaseBloc {
+
+  final _appData = AppData.getInstance; //singleton network instance
 
   final _userService = locator<UserService>();
   final _eventBus = locator<EventBus>();
@@ -22,16 +26,17 @@ class HomeScreenBloc extends BaseBloc {
 
   void navigateToWorkoutScreen(int index){
     if(index == 0){
-      locator<NavigationService>().pushNamed(ARMS_WORKOUT_SCREEN);
+      locator<NavigationService>().pushNamed(FULL_BODY_WORKOUT_SCREEN);
     }
 
     if(index == 1){
-      locator<NavigationService>().pushNamed(ABS_WORKOUT_SCREEN);
+      locator<NavigationService>().pushNamed(ARMS_WORKOUT_SCREEN);
     }
 
     if(index == 2){
-      locator<NavigationService>().pushNamed(FULL_BODY_WORKOUT_SCREEN);
+      locator<NavigationService>().pushNamed(ABS_WORKOUT_SCREEN);
     }
+
   }
 
   void getUserData() async {
@@ -45,8 +50,18 @@ class HomeScreenBloc extends BaseBloc {
 
     userDetailsSink.add(UserDetails(doc.data()));
 
-    print(doc.data());
-
+    if(doc.data()['userType'] == "Achiever"){
+      _appData.userTypes = UserTypes.ACHIEVER;
+    }
+    if(doc.data()['userType'] == "Socializer"){
+      _appData.userTypes = UserTypes.SOCIALIZER;
+    }
+    if(doc.data()['userType'] == "Explorer"){
+      _appData.userTypes = UserTypes.EXPLORER;
+    }
+    if(doc.data()['userType'] == "Killer"){
+      _appData.userTypes = UserTypes.KILLER;
+    }
   }
 
   @override

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flex/bloc/base_bloc.dart';
 import 'package:flex/bloc/home_screen_bloc.dart';
+import 'package:flex/helper/app_data.dart';
+import 'package:flex/helper/app_enums.dart';
 import 'package:flex/helper/load_events.dart';
 import 'package:flex/service_locator.dart';
 import 'package:flex/services/firebase_service.dart';
@@ -10,6 +12,8 @@ import 'package:flex/services/user_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ChangeUserDetailsBloc extends BaseBloc {
+
+  final _appData = AppData.getInstance; //singleton network instance
 
   final _userService = locator<UserService>();
   final _eventBus = locator<EventBus>();
@@ -39,7 +43,18 @@ class ChangeUserDetailsBloc extends BaseBloc {
 
     userDetailsSink.add(UserDetails(doc.data()));
 
-    print(doc.data());
+    if(doc.data()['userType'] == "Achiever"){
+      _appData.userTypes = UserTypes.ACHIEVER;
+    }
+    if(doc.data()['userType'] == "Socializer"){
+      _appData.userTypes = UserTypes.SOCIALIZER;
+    }
+    if(doc.data()['userType'] == "Explorer"){
+      _appData.userTypes = UserTypes.EXPLORER;
+    }
+    if(doc.data()['userType'] == "Killer"){
+      _appData.userTypes = UserTypes.KILLER;
+    }
 
   }
 

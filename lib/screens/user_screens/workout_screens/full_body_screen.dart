@@ -25,7 +25,7 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(minutes: 13));
+    _controller = AnimationController(vsync: this, duration: Duration(minutes: 13, seconds: 10));
   }
 
   @override
@@ -68,7 +68,7 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
               ),
               CountDown(
                 animation: StepTween(
-                  begin: 13 * 60,
+                  begin: 790,
                   end: 0,
                 ).animate(_controller),
               ),
@@ -78,19 +78,19 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
                 builder: (context, snapshot) {
                   return GestureDetector(
                     child: Container(
+                      margin: EdgeInsets.only(top: Utils.getDesignHeight(25.0)),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: PRIMARY_COLOR,
                       ),
-                      padding: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(20.0),
                       child: Icon(
                         snapshot.data ? Icons.pause_sharp : Icons.play_arrow,
                         color: Colors.white,
-                        size: 45,
+                        size: 50,
                       ),
                     ),
                     onTap: () {
-                      print(!snapshot.data);
                       if(snapshot.data){
                         _controller.stop();
                       }else{
@@ -121,41 +121,46 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
                 }
               ),
               StreamBuilder(
-                  stream: _workoutBloc.getIsDateTrueStream,
-                  initialData: false,
-                  builder: (context, snapshot) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: Utils.getDesignHeight(50.0)),
-                      width: Utils.getDesignWidth(300),
-                      height: Utils.getDesignHeight(50),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: snapshot.data ? Colors.transparent : PRIMARY_COLOR.withOpacity(0.2),
-                            offset: Offset(0, 0,),
-                            blurRadius: 21,
-                          ),
-                        ],
+                stream: _workoutBloc.getIsDateTrueStream,
+                initialData: false,
+                builder: (context, snapshot) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: Utils.getDesignHeight(50.0)),
+                    width: Utils.getDesignWidth(300),
+                    height: Utils.getDesignHeight(50),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: snapshot.data ? Colors.transparent : PRIMARY_COLOR.withOpacity(0.2),
+                          offset: Offset(0, 0,),
+                          blurRadius: 21,
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: PRIMARY_COLOR,
+                        onPrimary: Colors.grey,
+                        elevation: 0.0,
                       ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: PRIMARY_COLOR,
-                          onPrimary: Colors.grey,
-                          elevation: 0.0,
+                      child: Text(
+                        "Finish Workout",
+                        style: Theme.of(context).primaryTextTheme.button.copyWith(
+                            color: Colors.white
                         ),
-                        child: Text(
-                          "Finish Workout",
-                          style: Theme.of(context).primaryTextTheme.button.copyWith(
-                              color: Colors.white
-                          ),
-                        ),
-                        onPressed: snapshot.data ? null : () {
+                      ),
+                      onPressed: snapshot.data ? null : () {
+                        if(_controller.isCompleted){
                           _workoutBloc.setTimer();
                           _modalBottomSheetMenu();
-                        },
-                      ),
-                    );
-                  }
+                        }else{
+                          _controller.reset();
+                          _workoutBloc.navigateToHomeScreenPop();
+                        }
+                      },
+                    ),
+                  );
+                }
               ),
             ],
           ),
@@ -166,7 +171,7 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
 
   void _modalBottomSheetMenu(){
     showModalBottomSheet(
-      isDismissible: false,
+      isDismissible: true,
       context: context,
       builder: (builder){
         return Container(

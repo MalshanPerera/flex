@@ -1,3 +1,4 @@
+import 'package:flex/helper/app_enums.dart';
 import 'package:flex/services/base_managers/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
