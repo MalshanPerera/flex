@@ -28,11 +28,7 @@ import 'package:flex/services/base_managers/exceptions.dart';
 import 'package:flex/services/error_service.dart';
 import 'package:flex/services/navigation_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 class FelxHead extends StatefulWidget {
   @override
@@ -41,7 +37,6 @@ class FelxHead extends StatefulWidget {
 
 class _FelxHeadState extends State<FelxHead> {
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   final ErrorService errorHandler = locator<ErrorService>();
 
@@ -56,58 +51,7 @@ class _FelxHeadState extends State<FelxHead> {
   void initState() {
     super.initState();
 
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation("Asia/Colombo"));
-
     Firebase.initializeApp();
-
-    if(_prevErrorStream != errorHandler.getErrorText){
-      _prevErrorStream = errorHandler.getErrorText;
-      _errorSubscription?.cancel();
-      listenToErrors();
-    }
-
-    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-    var initSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-
-    flutterLocalNotificationsPlugin.initialize(initSettings, onSelectNotification: onSelectNotification);
-
-    scheduleNotification();
-  }
-
-
-  Future<void> onSelectNotification(String payload) {
-    return Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return SplashScreen();
-    }));
-  }
-
-  Future<void> scheduleNotification() async {
-    DateTime.now().add(Duration(seconds: 5));
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'channel id',
-      'channel name',
-      'channel description',
-      icon: '@mipmap/ic_launcher',
-      largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-    );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
-        'Flex',
-        'Time for your today\'s work out',
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 15)),
-        platformChannelSpecifics,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
-    );
   }
 
   @override
@@ -178,7 +122,7 @@ class _FelxHeadState extends State<FelxHead> {
               ),
             )
         ),
-        // initialRoute: SPLASH_SCREEN,
+        initialRoute: SPLASH_SCREEN,
         onGenerateRoute: (routeSettings) {
           switch (routeSettings.name) {
             case ON_BOARDING_SCREEN:
