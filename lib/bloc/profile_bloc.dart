@@ -53,8 +53,10 @@ class ProfileBloc extends BaseBloc {
   }
 
   void logout() async {
-    await locator<FirebaseService>().signOut().then((value) {
+    _userService.clear().whenComplete(() async {
+      await locator<FirebaseService>().signOut().then((value) {
       locator<NavigationService>().pushReplacement(LANDING_SCREEN);
+      });
     });
   }
 

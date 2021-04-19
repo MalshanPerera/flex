@@ -125,32 +125,66 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Container(
-                                        width: Utils.getDesignWidth(150),
-                                        child: CustomTextField(
-                                          keyboardType: TextInputType.number,
-                                          title: "Weight",
-                                          onChange: (weight) => this.weight = weight,
-                                          validator: (text){
-                                            if(text.length == 0){
-                                              return REQUIRED_FIELD;
-                                            }
-                                            return null;
-                                          },
+                                      Flexible(
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                child: CustomTextField(
+                                                  keyboardType: TextInputType.number,
+                                                  title: "Weight",
+                                                  onChange: (weight) => this.weight = weight,
+                                                  validator: (text){
+                                                    if(text.length == 0){
+                                                      return REQUIRED_FIELD;
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                "kg",
+                                                style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                                  fontSize: 18.0,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Container(
-                                        width: Utils.getDesignWidth(150),
-                                        child: CustomTextField(
-                                          keyboardType: TextInputType.number,
-                                          title: "Height",
-                                          onChange: (height) => this.height = height,
-                                          validator: (text){
-                                            if(text.length == 0){
-                                              return REQUIRED_FIELD;
-                                            }
-                                            return null;
-                                          },
+                                      Flexible(
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                child: CustomTextField(
+                                                  keyboardType: TextInputType.number,
+                                                  title: "Height",
+                                                  onChange: (height) => this.height = height,
+                                                  validator: (text){
+                                                    if(text.length == 0){
+                                                      return REQUIRED_FIELD;
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                "Inches",
+                                                style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                                  fontSize: 18.0,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],

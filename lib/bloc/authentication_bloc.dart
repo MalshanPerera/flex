@@ -111,17 +111,19 @@ class AuthenticationBloc extends BaseBloc {
 
     DocumentSnapshot doc = await locator<FirebaseService>().getUserData(userId: _uuid);
 
-    if(doc.data()['userType'] == "Achiever"){
-      _appData.userTypes = UserTypes.ACHIEVER;
-    }
-    if(doc.data()['userType'] == "Socializer"){
-      _appData.userTypes = UserTypes.SOCIALIZER;
-    }
-    if(doc.data()['userType'] == "Explorer"){
-      _appData.userTypes = UserTypes.EXPLORER;
-    }
-    if(doc.data()['userType'] == "Killer"){
-      _appData.userTypes = UserTypes.KILLER;
+    if(_uuid != null){
+      if(doc.data()['userType'] == "Achiever"){
+        _appData.userTypes = UserTypes.ACHIEVER;
+      }
+      if(doc.data()['userType'] == "Socializer"){
+        _appData.userTypes = UserTypes.SOCIALIZER;
+      }
+      if(doc.data()['userType'] == "Explorer"){
+        _appData.userTypes = UserTypes.EXPLORER;
+      }
+      if(doc.data()['userType'] == "Killer"){
+        _appData.userTypes = UserTypes.KILLER;
+      }
     }
   }
 
