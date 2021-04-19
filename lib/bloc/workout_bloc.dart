@@ -60,7 +60,7 @@ class WorkoutBloc extends BaseBloc {
   }
 
   void navigateToHomeScreen(){
-    locator<NavigationService>().pushReplacement(HOME_SCREEN);
+    locator<NavigationService>().pushReplacement(CONTENT_SCREEN);
   }
 
   void setMotivationRate(WorkoutType workoutType) async {
@@ -105,7 +105,7 @@ class WorkoutBloc extends BaseBloc {
     });
     _eventBus.fire(LoadEvent.hide());
 
-    locator<NavigationService>().pushReplacement(HOME_SCREEN);
+    locator<NavigationService>().pushReplacement(CONTENT_SCREEN);
   }
 
   void getAchievements() async {

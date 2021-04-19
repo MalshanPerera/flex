@@ -13,7 +13,7 @@ class OnBoardingBloc extends BaseBloc {
   Sink<int> get pageViewSink => _pageViewSubject.sink;
 
   void navigateToHomeScreen() {
-    locator<NavigationService>().pushReplacement(HOME_SCREEN);
+    locator<NavigationService>().pushReplacement(CONTENT_SCREEN);
   }
 
   @override
