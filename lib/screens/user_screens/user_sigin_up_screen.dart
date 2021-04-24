@@ -177,7 +177,7 @@ class _UserSignUpScreenState extends State<UserSignUpScreen > {
                                             ),
                                             Expanded(
                                               child: Text(
-                                                "Inches",
+                                                "Feet",
                                                 style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
                                                   fontSize: 18.0,
                                                 ),

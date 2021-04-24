@@ -34,6 +34,11 @@ class ProfileBloc extends BaseBloc {
 
     userDetailsSink.add(UserDetails(doc.data()));
 
+    _appData.achievementsBadges = doc.data()['game_elements']['achievements_badges'];
+    _appData.leaderboard = doc.data()['game_elements']['leaderboard'];
+    _appData.level = doc.data()['game_elements']['level'];
+    _appData.story = doc.data()['game_elements']['story'];
+
     if(doc.data()['userType'] == "Achiever"){
       _appData.userTypes = UserTypes.ACHIEVER;
     }

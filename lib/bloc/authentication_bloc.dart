@@ -3,6 +3,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flex/bloc/base_bloc.dart';
 import 'package:flex/helper/app_data.dart';
 import 'package:flex/helper/app_enums.dart';
+import 'package:flex/helper/app_methods.dart';
 import 'package:flex/helper/app_routes.dart';
 import 'package:flex/helper/load_events.dart';
 import 'package:flex/service_locator.dart';
@@ -37,7 +38,7 @@ class AuthenticationBloc extends BaseBloc {
     locator<NavigationService>().pushReplacementUtil(loggedIn ? CONTENT_SCREEN : LANDING_SCREEN);
   }
 
-  void login({String email, String password}) async {
+  Future<bool> login({String email, String password}) async {
 
     String uid;
 
@@ -56,8 +57,11 @@ class AuthenticationBloc extends BaseBloc {
       _userService.saveUserId(uid);
       print("UUID: $uid");
 
+      return true;
+
     }catch(error){
       print(error.toString());
+      return false;
     }
   }
 
@@ -80,6 +84,7 @@ class AuthenticationBloc extends BaseBloc {
       'height': height,
       'expPoints': 0,
       'step': 0,
+      'game_elements': AppMethods.getElements(userType: userType),
     };
 
     try {
@@ -108,10 +113,18 @@ class AuthenticationBloc extends BaseBloc {
   void getUserData() async {
 
     _uuid = await _userService.getUserId;
+    print(_uuid);
 
     DocumentSnapshot doc = await locator<FirebaseService>().getUserData(userId: _uuid);
 
     if(_uuid != null){
+      print(AppMethods.getElements(userType: doc.data()['userType']));
+
+      _appData.achievementsBadges = AppMethods.getElements(userType: doc.data()['userType'])['achievements_badges'];
+      _appData.leaderboard = AppMethods.getElements(userType: doc.data()['userType'])['leaderboard'];
+      _appData.level = AppMethods.getElements(userType: doc.data()['userType'])['level'];
+      _appData.story = AppMethods.getElements(userType: doc.data()['userType'])['story'];
+
       if(doc.data()['userType'] == "Achiever"){
         _appData.userTypes = UserTypes.ACHIEVER;
       }

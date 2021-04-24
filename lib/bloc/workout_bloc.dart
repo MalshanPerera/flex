@@ -158,8 +158,6 @@ class WorkoutBloc extends BaseBloc {
 
     print("achievement: $achievement");
 
-    // List<String> _ach = ["Complete 14 days Challenge", "Exercise for 5 days Straight", "Exercise for 10 days Straight", "First Day"];
-    // List<String> _badges = ["Weight Lost Master", "No Pain No Gain", "Gainz for Dayz", "I am Iron Man"];
   }
 
   void setBadges() async {

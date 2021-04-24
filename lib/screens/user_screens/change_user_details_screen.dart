@@ -258,6 +258,50 @@ class _ChangeUserDetailsScreenState extends State<ChangeUserDetailsScreen > {
                                   }
                               ),
                             ),
+                            StreamBuilder(
+                              initialData: false,
+                              stream: _changeUserDetailsBloc.leaderboardStream,
+                              builder: (context, snapshot) {
+                                return _gameElementsOnOff(
+                                  text: "Leaderboard",
+                                  value: snapshot.data,
+                                  onChanged: (value) => _changeUserDetailsBloc.leaderboardSink.add(value),
+                                );
+                              }
+                            ),
+                            StreamBuilder(
+                              initialData: false,
+                              stream: _changeUserDetailsBloc.achievementAndBadgesStream,
+                              builder: (context, snapshot) {
+                                return _gameElementsOnOff(
+                                  text: "Achievements and Badges",
+                                  value: snapshot.data,
+                                  onChanged: (value) => _changeUserDetailsBloc.achievementAndBadgesSink.add(value),
+                                );
+                              }
+                            ),
+                            StreamBuilder(
+                              initialData: false,
+                              stream: _changeUserDetailsBloc.levelStream,
+                              builder: (context, snapshot) {
+                                return _gameElementsOnOff(
+                                  text: "Level",
+                                  value: snapshot.data,
+                                  onChanged: (value) => _changeUserDetailsBloc.levelSink.add(value),
+                                );
+                              }
+                            ),
+                            StreamBuilder(
+                              initialData: false,
+                              stream: _changeUserDetailsBloc.storyStream,
+                              builder: (context, snapshot) {
+                                return _gameElementsOnOff(
+                                  text: "Story",
+                                  value: snapshot.data,
+                                  onChanged: (value) => _changeUserDetailsBloc.storySink.add(value),
+                                );
+                              }
+                            ),
                             Container(
                               margin: EdgeInsets.only(top: Utils.getDesignHeight(20.0)),
                               width: double.infinity,
@@ -285,8 +329,6 @@ class _ChangeUserDetailsScreenState extends State<ChangeUserDetailsScreen > {
                                 ),
                                 onPressed: () {
                                   if(_key.currentState.validate()){
-                                    print(_userType(userTypeId: _userTypeInt(oldSnapshot.data.userType)));
-                                    print(_userType(userTypeId: this.userType));
                                     _key.currentState.save();
                                     FocusScope.of(context).unfocus();
                                     _changeUserDetailsBloc.changeUserDetails(
@@ -310,6 +352,23 @@ class _ChangeUserDetailsScreenState extends State<ChangeUserDetailsScreen > {
           ),
         ),
         LoadingBarrier(_loadingBloc.isLoading),
+      ],
+    );
+  }
+
+  Widget _gameElementsOnOff({String text, bool value, Function(bool) onChanged}){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          text,
+          style: Theme.of(context).primaryTextTheme.bodyText1,
+        ),
+        Switch(
+          activeColor: Theme.of(context).primaryColor,
+          value: value,
+          onChanged: onChanged,
+        ),
       ],
     );
   }

@@ -46,6 +46,7 @@ class _FelxHeadState extends State<FelxHead> {
   HomeScreenBloc _homeScreenBloc;
   LeaderboardBloc _leaderboardBloc;
   ProfileBloc _profileBloc;
+  ChangeUserDetailsBloc _changeUserDetailsBloc;
 
   @override
   void initState() {
@@ -73,6 +74,9 @@ class _FelxHeadState extends State<FelxHead> {
       providers: [
         Provider<AuthenticationBloc>(
           create: (_) => AuthenticationBloc(),
+        ),
+        Provider<ChangeUserDetailsBloc>(
+          create: (_) => ChangeUserDetailsBloc(),
         ),
         Provider<LoadingBloc>(
           create: (_) => LoadingBloc(),
@@ -157,21 +161,18 @@ class _FelxHeadState extends State<FelxHead> {
                         _homeScreenBloc = HomeScreenBloc();
                         return _homeScreenBloc;
                       },
-                      dispose: (_,bloc) => bloc.dispose(),
                     ),
                     Provider<LeaderboardBloc>(
                       create: (context) {
                         _leaderboardBloc = LeaderboardBloc();
                         return _leaderboardBloc;
                       },
-                      dispose: (_,bloc) => bloc.dispose(),
                     ),
                     Provider<ProfileBloc>(
                       create: (context) {
                         _profileBloc = ProfileBloc();
                         return _profileBloc;
                       },
-                      dispose: (_,bloc) => bloc.dispose(),
                     ),
                   ],
                   child: ContentScreen(),
@@ -203,11 +204,7 @@ class _FelxHeadState extends State<FelxHead> {
               );
             case CHANGE_USER_DETAILS_SCREEN:
               return MaterialPageRoute(
-                builder: (c) => Provider(
-                  create: (context) => ChangeUserDetailsBloc(),
-                  child: ChangeUserDetailsScreen(),
-                  dispose: (_, bloc) => bloc.dispose(),
-                ),
+                builder: (c) => ChangeUserDetailsScreen(),
               );
             default:
               return MaterialPageRoute(

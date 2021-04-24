@@ -4,6 +4,7 @@ import 'package:flex/bloc/base_bloc.dart';
 import 'package:flex/bloc/home_screen_bloc.dart';
 import 'package:flex/helper/app_data.dart';
 import 'package:flex/helper/app_enums.dart';
+import 'package:flex/helper/app_methods.dart';
 import 'package:flex/helper/load_events.dart';
 import 'package:flex/service_locator.dart';
 import 'package:flex/services/firebase_service.dart';
@@ -32,6 +33,22 @@ class ChangeUserDetailsBloc extends BaseBloc {
   Stream<UserDetails> get userDetailsStream => _userDetailsSubject.stream;
   Sink<UserDetails> get userDetailsSink => _userDetailsSubject.sink;
 
+  BehaviorSubject<bool> _levelSubject = BehaviorSubject<bool>();
+  Stream<bool> get levelStream => _levelSubject.stream;
+  Sink<bool> get levelSink => _levelSubject.sink;
+
+  BehaviorSubject<bool> _achievementAndBadgesSubject = BehaviorSubject<bool>();
+  Stream<bool> get achievementAndBadgesStream => _achievementAndBadgesSubject.stream;
+  Sink<bool> get achievementAndBadgesSink => _achievementAndBadgesSubject.sink;
+
+  BehaviorSubject<bool> _leaderboardSubject = BehaviorSubject<bool>();
+  Stream<bool> get leaderboardStream => _leaderboardSubject.stream;
+  Sink<bool> get leaderboardSink => _leaderboardSubject.sink;
+
+  BehaviorSubject<bool> _storySubject = BehaviorSubject<bool>();
+  Stream<bool> get storyStream => _storySubject.stream;
+  Sink<bool> get storySink => _storySubject.sink;
+
   void getUserData() async {
 
     _uuid = await _userService.getUserId;
@@ -42,6 +59,16 @@ class ChangeUserDetailsBloc extends BaseBloc {
     });
 
     userDetailsSink.add(UserDetails(doc.data()));
+
+    achievementAndBadgesSink.add(doc.data()['game_elements']['achievements_badges']);
+    leaderboardSink.add(doc.data()['game_elements']['leaderboard']);
+    storySink.add(doc.data()['game_elements']['story']);
+    levelSink.add(doc.data()['game_elements']['level']);
+
+    _appData.achievementsBadges = doc.data()['game_elements']['achievements_badges'];
+    _appData.leaderboard = doc.data()['game_elements']['leaderboard'];
+    _appData.level = doc.data()['game_elements']['level'];
+    _appData.story = doc.data()['game_elements']['story'];
 
     if(doc.data()['userType'] == "Achiever"){
       _appData.userTypes = UserTypes.ACHIEVER;
@@ -55,7 +82,6 @@ class ChangeUserDetailsBloc extends BaseBloc {
     if(doc.data()['userType'] == "Killer"){
       _appData.userTypes = UserTypes.KILLER;
     }
-
   }
 
   void changeUserDetails({String name, double weight, double height, String userType}) async {
@@ -65,19 +91,91 @@ class ChangeUserDetailsBloc extends BaseBloc {
       'userType': userType,
       'weight': weight,
       'height': height,
+      'game_elements': _appData.userTypes != _userType(userType: userType) ? _elements(userType) : {
+        'achievements_badges': _achievementAndBadgesSubject.value,
+        'leaderboard': _leaderboardSubject.value,
+        'story': _storySubject.value,
+        'level': _levelSubject.value,
+      },
     };
 
     try {
 
       _eventBus.fire(LoadEvent.show());
-      await locator<FirebaseService>().updateUserData(userId: _uuid, map: userData);
+      await locator<FirebaseService>().updateUserData(userId: _uuid, map: userData).whenComplete(() => getUserData());
       _eventBus.fire(LoadEvent.hide());
 
-      locator<NavigationService>().pop(isTrue: true);
+      locator<NavigationService>().showError(ExceptionTypes.SUCCESS, "User Details Updated Successfully!!");
 
     }catch(error){
       print(error.toString());
     }
+  }
+
+  Map<String, bool> _elements(String userType){
+
+    print(userType);
+
+    if(userType == "Killer"){
+      return {
+        'achievements_badges': false,
+        'leaderboard': true,
+        'story': false,
+        'level': true,
+      };
+    }
+    if(userType == "Explorer"){
+      return {
+        'achievements_badges': true,
+        'leaderboard': false,
+        'story': true,
+        'level': true,
+      };
+    }
+    if(userType == "Achiever"){
+      return {
+        'achievements_badges': true,
+        'leaderboard': true,
+        'story': false,
+        'level': true,
+      };
+    }
+    if(userType == "Socializer"){
+      return {
+        'achievements_badges': true,
+        'leaderboard': false,
+        'story': true,
+        'level': false,
+      };
+    }
+
+    return {
+      'achievements_badges': false,
+      'leaderboard': false,
+      'story': false,
+      'level': false,
+    };
+  }
+
+  UserTypes _userType({String userType}){
+
+    if(userType == "Achiever"){
+      return UserTypes.ACHIEVER;
+    }
+
+    if(userType == "Socializer"){
+      return UserTypes.SOCIALIZER;
+    }
+
+    if(userType == "Explorer"){
+      return UserTypes.EXPLORER;
+    }
+
+    if(userType == "Killer"){
+      return UserTypes.KILLER;
+    }
+
+    return UserTypes.NON;
   }
 
   @override
@@ -85,6 +183,10 @@ class ChangeUserDetailsBloc extends BaseBloc {
     _genderRadioBtnSubject.close();
     _userTypeRadioBtnSubject.close();
     _userDetailsSubject.close();
+    _levelSubject.close();
+    _achievementAndBadgesSubject.close();
+    _leaderboardSubject.close();
+    _storySubject.close();
   }
 
 }

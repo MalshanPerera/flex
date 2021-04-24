@@ -3,6 +3,7 @@ enum UserTypes {
   SOCIALIZER,
   EXPLORER,
   KILLER,
+  NON,
 }
 
 enum VideoType{
@@ -22,6 +23,7 @@ enum ExceptionTypes {
   REQUEST_ERROR,
   AP_ERROR,
   UNIMPLEMENTED_EXCEPTION,
+  SUCCESS,
 }
 
 extension ExceptionExtension on ExceptionTypes {
@@ -37,6 +39,8 @@ extension ExceptionExtension on ExceptionTypes {
         return 'WIFI Error';
       case ExceptionTypes.UNIMPLEMENTED_EXCEPTION:
         return 'Unimplemented Exception';
+      case ExceptionTypes.SUCCESS:
+        return 'SUCCESS';
       default:
         return "";
     }

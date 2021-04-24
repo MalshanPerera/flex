@@ -8,5 +8,9 @@ class AppData {
   static AppData get getInstance => _instance;
 
   UserTypes userTypes;
+  bool achievementsBadges;
+  bool leaderboard;
+  bool story;
+  bool level;
 
 }

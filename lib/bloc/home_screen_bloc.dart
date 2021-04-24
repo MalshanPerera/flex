@@ -50,6 +50,11 @@ class HomeScreenBloc extends BaseBloc {
 
     userDetailsSink.add(UserDetails(doc.data()));
 
+    _appData.achievementsBadges = doc.data()['game_elements']['achievements_badges'];
+    _appData.leaderboard = doc.data()['game_elements']['leaderboard'];
+    _appData.level = doc.data()['game_elements']['level'];
+    _appData.story = doc.data()['game_elements']['story'];
+
     if(doc.data()['userType'] == "Achiever"){
       _appData.userTypes = UserTypes.ACHIEVER;
     }
@@ -87,6 +92,7 @@ class UserDetails {
   int step;
   List<String> achievementsList = [];
   List<int> badgesList = [];
+  Elements elements;
 
   UserDetails(Map<String, dynamic> parseJSON){
     name = parseJSON['name'] ?? "";
@@ -101,6 +107,11 @@ class UserDetails {
     height = parseJSON['height'].toDouble() ?? 0.0;
     expPoints = parseJSON['expPoints'] ?? 0;
     step = parseJSON['step'] ?? 0;
+    step = parseJSON['step'] ?? 0;
+
+    if (parseJSON['game_elements'] != null) {
+      elements = Elements(parseJSON['game_elements']);
+    }
 
     if (parseJSON['achievement'] != null) {
       parseJSON['achievement'].forEach((achievement){
@@ -113,5 +124,19 @@ class UserDetails {
         badgesList.add(badge);
       });
     }
+  }
+}
+
+class Elements {
+  bool achievementsAndBadges;
+  bool leaderboard;
+  bool story;
+  bool level;
+
+  Elements(Map<String, dynamic> parseJSON){
+    achievementsAndBadges = parseJSON['achievements_badges'] ?? false;
+    leaderboard = parseJSON['leaderboard'] ?? false;
+    story = parseJSON['story'] ?? false;
+    level = parseJSON['level'] ?? false;
   }
 }

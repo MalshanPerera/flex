@@ -3,16 +3,13 @@ import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/helper/app_assets.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_utils.dart';
-import 'package:flex/screens/user_screens/workout_screens/full_body_screen.dart';
+import 'package:flex/screens/splash_screen.dart';
 import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
-
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,8 +19,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
 
   List<Map<String, dynamic>> _categoryList = [
     {
@@ -43,56 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeScreenBloc _homeScreenBloc;
   LoadingBloc _loadingBloc;
   bool _isLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation("Asia/Colombo"));
-
-    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-    var initSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-
-    flutterLocalNotificationsPlugin.initialize(initSettings, onSelectNotification: onSelectNotification);
-
-    scheduleNotification();
-  }
-
-
-  Future<void> onSelectNotification(String payload) {
-    return Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return FullBodyWorkoutScreen();
-    }));
-  }
-
-  Future<void> scheduleNotification() async {
-    DateTime.now().add(Duration(seconds: 5));
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'channel id',
-      'channel name',
-      'channel description',
-      icon: '@mipmap/ic_launcher',
-      largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
-    );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'Flex',
-      'Time for your today\'s work out',
-      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 15)),
-      platformChannelSpecifics,
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
 
   @override
   void didChangeDependencies() {

@@ -15,20 +15,13 @@ class DisplayImpl extends DisplayError {
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
       reverseAnimationCurve: Curves.decelerate,
-      forwardAnimationCurve: Curves.elasticOut,
+      forwardAnimationCurve: Curves.easeIn,
       backgroundColor: PRIMARY_COLOR,
       isDismissible: true,
       duration: Duration(seconds: 3),
       icon: Icon(
         Icons.error_outline,
         color: Colors.white,
-      ),
-      mainButton: FlatButton(
-        onPressed: () {},
-        child: Text(
-          "OK",
-          style: TextStyle(color: Colors.white),
-        ),
       ),
       titleText: Text(
         errorType,
