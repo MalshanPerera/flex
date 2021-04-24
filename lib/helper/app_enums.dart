@@ -17,6 +17,17 @@ enum WorkoutType{
   FULL_BODY,
 }
 
+enum HomeTabs{
+  HOME,
+  LEADERBOARD,
+  PROFILE,
+}
+
+enum HomeTabsTwo{
+  HOME,
+  PROFILE,
+}
+
 enum ExceptionTypes {
   TIMEOUT_EXCEPTION,
   SOCKET_EXCEPTION,

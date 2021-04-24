@@ -1,15 +1,15 @@
 import 'package:flex/bloc/change_user_details_bloc.dart';
-import 'package:flex/bloc/home_screen_bloc.dart';
-import 'package:flex/bloc/profile_bloc.dart';
+import 'package:flex/bloc/content_bloc.dart';
+import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_data.dart';
 import 'package:flex/helper/app_enums.dart';
 import 'package:flex/screens/user_screens/home_screen.dart';
 import 'package:flex/screens/user_screens/leaderboard_screen.dart';
 import 'package:flex/screens/user_screens/profile_screen.dart';
+import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
 class ContentScreen extends StatefulWidget {
@@ -19,25 +19,22 @@ class ContentScreen extends StatefulWidget {
 
 class _ContentScreenState extends State<ContentScreen> {
 
-  PersistentTabController _controller;
-  ProfileBloc _profileBloc;
-  ChangeUserDetailsBloc _changeUserDetailsBloc;
-
   final _appData = AppData.getInstance; //singleton network instance
 
+  ContentScreenBloc _contentScreenBloc;
+  ChangeUserDetailsBloc _changeUserDetailsBloc;
+  LoadingBloc _loadingBloc;
   bool _isLoaded = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _controller = PersistentTabController(initialIndex: 0);
-
     if(!_isLoaded){
-      _profileBloc = Provider.of<ProfileBloc>(context);
+      _contentScreenBloc = Provider.of<ContentScreenBloc>(context);
       _changeUserDetailsBloc = Provider.of<ChangeUserDetailsBloc>(context);
+      _loadingBloc = Provider.of<LoadingBloc>(context);
 
-      _profileBloc.getUserData();
       _changeUserDetailsBloc.getUserData();
 
       _isLoaded = true;
@@ -47,122 +44,84 @@ class _ContentScreenState extends State<ContentScreen> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: _changeUserDetailsBloc.userDetailsStream,
-      builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-        if(snapshot.hasData){
-          return PersistentTabView(
-            context,
-            controller: _controller,
-            screens: getScreenItems(context, _appData.leaderboard ? 3 : 2),
-            items: getBottomNavItems(context, _appData.leaderboard ? 3 : 2),
-            confineInSafeArea: true,
-            backgroundColor: Colors.white, // Default is Colors.white.
-            handleAndroidBackButtonPress: true, // Default is true.
-            resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-            stateManagement: false, // Default is true.
-            hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-            decoration: NavBarDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              colorBehindNavBar: Colors.white,
+      initialData: 0,
+      stream: _changeUserDetailsBloc.tabIndexStream,
+      builder: (context, snapshotIndex) {
+        print(snapshotIndex.data);
+        return _appData.leaderboard != null ? Stack(
+          children: [
+            Container(
+              color: BACKGROUND_COLOR,
+              child: SafeArea(
+                child: Scaffold(
+                  backgroundColor: BACKGROUND_COLOR,
+                  body: _appData.leaderboard ? StreamBuilder(
+                    initialData: HomeTabs.HOME,
+                    stream: _contentScreenBloc.pageChanged,
+                    builder: (context, AsyncSnapshot<HomeTabs> contentSnapshot){
+                      switch (contentSnapshot.data) {
+                        case HomeTabs.HOME:
+                          return HomeScreen();
+                        case HomeTabs.LEADERBOARD:
+                          return LeaderBoardScreen();
+                        case HomeTabs.PROFILE:
+                          return ProfileScreen();
+                        default:
+                          return Container();
+                      }
+                    },
+                  ) : StreamBuilder(
+                    initialData: HomeTabsTwo.HOME,
+                    stream: _contentScreenBloc.pageTwoChanged,
+                    builder: (context, AsyncSnapshot<HomeTabsTwo> contentSnapshot){
+                      switch (contentSnapshot.data) {
+                        case HomeTabsTwo.HOME:
+                          return HomeScreen();
+                        case HomeTabsTwo.PROFILE:
+                          return ProfileScreen();
+                        default:
+                          return Container();
+                      }
+                    },
+                  ),
+                  bottomNavigationBar: BottomNavigationBar(
+                    currentIndex: snapshotIndex.data,
+                    selectedItemColor: PRIMARY_COLOR,
+                    items: _appData.leaderboard ? [
+                      BottomNavigationBarItem(
+                        icon: Icon(CupertinoIcons.home),
+                        label: ("Home"),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.leaderboard),
+                        label: ("Leaderboard"),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(CupertinoIcons.profile_circled),
+                        label: ("Profile"),
+                      ),
+                    ] : [
+                      BottomNavigationBarItem(
+                        icon: Icon(CupertinoIcons.home),
+                        label: ("Home"),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(CupertinoIcons.profile_circled),
+                        label: ("Profile"),
+                      ),
+                    ],
+                    onTap: (index) {
+                      _appData.leaderboard ? _contentScreenBloc.setNavigationEvent.add(index) : _contentScreenBloc.setNavigationEventTwo.add(index);
+                      _changeUserDetailsBloc.tabIndexSink.add(index);
+                    },
+                  ),
+                ),
+              ),
             ),
-            popAllScreensOnTapOfSelectedTab: false,
-            popActionScreens: PopActionScreensType.all,
-            itemAnimationProperties: ItemAnimationProperties( // Navigation Bar's items animation properties.
-              duration: Duration(milliseconds: 200),
-              curve: Curves.ease,
-            ),
-            screenTransitionAnimation: ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
-              animateTabTransition: true,
-              curve: Curves.ease,
-              duration: Duration(milliseconds: 200),
-            ),
-            navBarStyle: NavBarStyle.style12, // Choose the nav bar style with this property.
-          );
-        }else{
-          return Container();
-        }
+            LoadingBarrier(_loadingBloc.isLoading),
+          ],
+        ) : Container();
       }
     );
-  }
-
-  List<Widget> _screens = [
-    HomeScreen(),
-    LeaderBoardScreen(),
-    ProfileScreen(),
-  ];
-
-  List<Widget> _screensTwo = [
-    HomeScreen(),
-    ProfileScreen(),
-  ];
-
-  List<PersistentBottomNavBarItem> _bottomNav = [
-    PersistentBottomNavBarItem(
-      icon: Icon(CupertinoIcons.home),
-      title: ("Home"),
-      activeColorPrimary: PRIMARY_COLOR,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    ),
-    PersistentBottomNavBarItem(
-      icon: Icon(Icons.leaderboard),
-      title: ("Leaderboard"),
-      activeColorPrimary: PRIMARY_COLOR,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    ),
-    PersistentBottomNavBarItem(
-      icon: Icon(CupertinoIcons.profile_circled),
-      title: ("Profile"),
-      activeColorPrimary: PRIMARY_COLOR,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    ),
-  ];
-
-  List<PersistentBottomNavBarItem> _bottomNavTwo = [
-    PersistentBottomNavBarItem(
-      icon: Icon(CupertinoIcons.home),
-      title: ("Home"),
-      activeColorPrimary: PRIMARY_COLOR,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    ),
-    PersistentBottomNavBarItem(
-      icon: Icon(CupertinoIcons.profile_circled),
-      title: ("Profile"),
-      activeColorPrimary: PRIMARY_COLOR,
-      inactiveColorPrimary: CupertinoColors.systemGrey,
-    ),
-  ];
-
-  List<Widget> getScreenItems(BuildContext context, int index){
-
-    List<Widget> screen = [];
-
-    if(index == 2){
-      for(int i=0, j=index; i<j; i++){
-        screen.add(_screensTwo[i]);
-      }
-    }else{
-      for(int i=0, j=index; i<j; i++){
-        screen.add(_screens[i]);
-      }
-    }
-
-    return screen;
-  }
-
-  List<PersistentBottomNavBarItem> getBottomNavItems(BuildContext context, int index){
-
-    List<PersistentBottomNavBarItem> bottomNav = [];
-
-    if(index == 2){
-      for(int i=0, j=index; i<j; i++){
-        bottomNav.add(_bottomNavTwo[i]);
-      }
-    }else{
-      for(int i=0, j=index; i<j; i++){
-        bottomNav.add(_bottomNav[i]);
-      }
-    }
-
-    return bottomNav;
   }
 }

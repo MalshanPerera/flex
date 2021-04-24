@@ -1,13 +1,9 @@
-import 'package:flex/bloc/change_user_details_bloc.dart';
 import 'package:flex/bloc/home_screen_bloc.dart';
-import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/bloc/profile_bloc.dart';
 import 'package:flex/helper/app_assets.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_data.dart';
-import 'package:flex/helper/app_enums.dart';
 import 'package:flex/helper/app_utils.dart';
-import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:im_stepper/stepper.dart';
@@ -21,7 +17,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
   ProfileBloc _profileBloc;
-  LoadingBloc _loadingBloc;
 
   bool _isLoaded = false;
 
@@ -33,294 +28,281 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if(!_isLoaded){
       _profileBloc = Provider.of<ProfileBloc>(context);
-      _loadingBloc = Provider.of<LoadingBloc>(context);
-
       _profileBloc.getUserData();
-
       _isLoaded = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          color: BACKGROUND_COLOR,
-          child: SafeArea(
-            child: Scaffold(
-              backgroundColor: BACKGROUND_COLOR,
-              body: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(left: Utils.getDesignWidth(26), top: Utils.getDesignHeight(20.0), right: Utils.getDesignWidth(26), bottom: Utils.getDesignHeight(20.0)),
-                  child: StreamBuilder(
-                    stream: _profileBloc.userDetailsStream,
-                    builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                      return snapshot.hasData ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      backgroundColor: BACKGROUND_COLOR,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(left: Utils.getDesignWidth(26), top: Utils.getDesignHeight(20.0), right: Utils.getDesignWidth(26), bottom: Utils.getDesignHeight(20.0)),
+          child: StreamBuilder(
+              stream: _profileBloc.userDetailsStream,
+              builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                return snapshot.hasData ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Column(
                         children: [
-                          Center(
-                            child: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.logout,
-                                        color: Colors.transparent,
-                                        size: 25.0,
-                                      ),
-                                    ),
-                                    Stack(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 70.0,
-                                          backgroundImage:
-                                          NetworkImage(DEFAULT_AVATAR),
-                                          backgroundColor: Colors.white,
-                                        ),
-                                        Positioned(
-                                          bottom: 0,
-                                          right: 0,
-                                          child: GestureDetector(
-                                            child: CircleAvatar(
-                                              radius: 18.0,
-                                              child: Icon(Icons.edit),
-                                              backgroundColor: Colors.white,
-                                            ),
-                                            onTap: () {
-                                              _refreshNavigator();
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    GestureDetector(
-                                      child: Container(
-                                        padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.logout,
-                                          color: PRIMARY_COLOR,
-                                          size: 25.0,
-                                        ),
-                                      ),
-                                      onTap: () => _profileBloc.logout(),
-                                    ),
-                                  ],
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  shape: BoxShape.circle,
                                 ),
-                                _appData.level ? StreamBuilder(
-                                  stream: _profileBloc.userDetailsStream,
-                                  builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                                    return snapshot.hasData ? Column(
-                                      children: [
-                                        Text(
-                                          snapshot.data.name,
-                                          style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 35.0,
-                                          ),
-                                          overflow: TextOverflow.fade,
-                                        ),
-                                        _appData.level ? Text(
-                                          _level(snapshot.data.expPoints) == 10 ? "Platinum Player" : "Level ${_level(snapshot.data.expPoints)}",
-                                          style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15.0,
-                                          ),
-                                          overflow: TextOverflow.fade,
-                                        ) : Container(),
-                                        _exp(snapshot.data.expPoints).contains("Full") || !snapshot.data.elements.level ? Container() : Text(
-                                          _exp(snapshot.data.expPoints),
-                                          style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15.0,
-                                          ),
-                                          overflow: TextOverflow.fade,
-                                        ),
-                                      ],
-                                    ) : Container();
-                                  }
-                                ) : Container(),
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Container(
-                              margin: EdgeInsets.only(top: Utils.getDesignHeight(20.0)),
-                              padding: EdgeInsets.symmetric(vertical: Utils.getDesignHeight(5.0)),
-                              width: Utils.getDesignWidth(150),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                                border: Border.all(
-                                    color: Colors.grey.withOpacity(0.5),
+                                child: Icon(
+                                  Icons.logout,
+                                  color: Colors.transparent,
+                                  size: 25.0,
                                 ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              Stack(
                                 children: [
-                                  Column(
-                                    children: [
-                                      StreamBuilder(
-                                        stream: _profileBloc.userDetailsStream,
-                                        builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                                          return Text(
-                                            "${snapshot.hasData ? snapshot.data.weight : 0} kg",
-                                            style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                            overflow: TextOverflow.fade,
-                                          );
-                                        }
-                                      ),
-                                      Text(
-                                        "Weight",
-                                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                        ),
-                                        overflow: TextOverflow.fade,
-                                      ),
-                                    ],
+                                  CircleAvatar(
+                                    radius: 70.0,
+                                    backgroundImage:
+                                    NetworkImage(DEFAULT_AVATAR),
+                                    backgroundColor: Colors.white,
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: PINK,
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      child: CircleAvatar(
+                                        radius: 18.0,
+                                        child: Icon(Icons.edit),
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      onTap: () {
+                                        _refreshNavigator();
+                                      },
                                     ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      StreamBuilder(
-                                        stream: _profileBloc.userDetailsStream,
-                                        builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                                          return Text(
-                                            "${snapshot.hasData ? snapshot.data.height : 0} feets",
-                                            style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                            overflow: TextOverflow.fade,
-                                          );
-                                        }
-                                      ),
-                                      Text(
-                                        "Height",
-                                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                        ),
-                                        overflow: TextOverflow.fade,
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          _appData.achievementsBadges ? Padding(
-                            padding: EdgeInsets.only(top: Utils.getDesignHeight(30.0),),
-                            child: Text(
-                              "Achievements & Badges",
-                              style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                                color: Colors.black,
+                              GestureDetector(
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.logout,
+                                    color: PRIMARY_COLOR,
+                                    size: 25.0,
+                                  ),
+                                ),
+                                onTap: () => _profileBloc.logout(),
                               ),
-                            ),
-                          ) : Container(),
-                          _appData.achievementsBadges  ? Padding(
-                            padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0),),
-                            child: StreamBuilder(
+                            ],
+                          ),
+                          _appData.level ? StreamBuilder(
                               stream: _profileBloc.userDetailsStream,
                               builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                                return _achievementBadgesWidget(snapshot.hasData ? snapshot.data.achievementsList : []);
-                              }
-                            ),
-                          ) : Container(),
-                          _appData.story ? Padding(
-                            padding: EdgeInsets.only(top: Utils.getDesignHeight(30.0),),
-                            child: Text(
-                              "Story Line",
-                              style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ) : Container(),
-                          _appData.story ? Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.withOpacity(0.5))
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              vertical: Utils.getDesignHeight(10.0),
-                              horizontal: Utils.getDesignWidth(10.0),
-                            ),
-                            margin: EdgeInsets.only(top: Utils.getDesignHeight(10.0),),
-                            child: Text(
-                              "Godzila has declared war against you. It is the king of monsters. To battle him finish the 14 day challenge or you will be crushed by Godzila",
-                              style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                fontSize: 14.0,
-                                color: PRIMARY_COLOR,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ) : Container(),
-                          _appData.story ? StreamBuilder(
-                            stream: _profileBloc.userDetailsStream,
-                            builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-
-                              if(snapshot.hasData){
-                                if(snapshot.data.step == 13){
-                                  return Container(
-                                    color: Colors.green,
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: Utils.getDesignHeight(15)
-                                    ),
-                                    child: Text(
-                                      "Story Completed",
+                                return snapshot.hasData ? Column(
+                                  children: [
+                                    Text(
+                                      snapshot.data.name,
                                       style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                                        fontSize: 15.0,
-                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 35.0,
                                       ),
-                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.fade,
                                     ),
-                                  );
-                                }else{
-                                  return _storyWidget(
-                                    activeStep: snapshot.data.step,
-                                  );
-                                }
-                              }else{
-                                return Container();
+                                    _appData.level ? Text(
+                                      _level(snapshot.data.expPoints) == 10 ? "Platinum Player" : "Level ${_level(snapshot.data.expPoints)}",
+                                      style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
+                                      ),
+                                      overflow: TextOverflow.fade,
+                                    ) : Container(),
+                                    _exp(snapshot.data.expPoints).contains("Full") || !snapshot.data.elements.level ? Container() : Text(
+                                      _exp(snapshot.data.expPoints),
+                                      style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
+                                      ),
+                                      overflow: TextOverflow.fade,
+                                    ),
+                                  ],
+                                ) : Container();
                               }
-                            }
                           ) : Container(),
                         ],
-                      ): Container();
-                    }
-                  ),
-                ),
-              ),
-            ),
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: Utils.getDesignHeight(20.0)),
+                        padding: EdgeInsets.symmetric(vertical: Utils.getDesignHeight(5.0)),
+                        width: Utils.getDesignWidth(150),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.5),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              children: [
+                                StreamBuilder(
+                                    stream: _profileBloc.userDetailsStream,
+                                    builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                                      return Text(
+                                        "${snapshot.hasData ? snapshot.data.weight : 0} kg",
+                                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0,
+                                        ),
+                                        overflow: TextOverflow.fade,
+                                      );
+                                    }
+                                ),
+                                Text(
+                                  "Weight",
+                                  style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                  ),
+                                  overflow: TextOverflow.fade,
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: PINK,
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                StreamBuilder(
+                                    stream: _profileBloc.userDetailsStream,
+                                    builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                                      return Text(
+                                        "${snapshot.hasData ? snapshot.data.height : 0} feets",
+                                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15.0,
+                                        ),
+                                        overflow: TextOverflow.fade,
+                                      );
+                                    }
+                                ),
+                                Text(
+                                  "Height",
+                                  style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                  ),
+                                  overflow: TextOverflow.fade,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    _appData.achievementsBadges ? Padding(
+                      padding: EdgeInsets.only(top: Utils.getDesignHeight(30.0),),
+                      child: Text(
+                        "Achievements & Badges",
+                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ) : Container(),
+                    _appData.achievementsBadges  ? Padding(
+                      padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0),),
+                      child: StreamBuilder(
+                          stream: _profileBloc.userDetailsStream,
+                          builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                            return _achievementBadgesWidget(snapshot.hasData ? snapshot.data.achievementsList : []);
+                          }
+                      ),
+                    ) : Container(),
+                    _appData.story ? Padding(
+                      padding: EdgeInsets.only(top: Utils.getDesignHeight(30.0),),
+                      child: Text(
+                        "Story Line",
+                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ) : Container(),
+                    _appData.story ? Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.withOpacity(0.5))
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: Utils.getDesignHeight(10.0),
+                        horizontal: Utils.getDesignWidth(10.0),
+                      ),
+                      margin: EdgeInsets.only(top: Utils.getDesignHeight(10.0),),
+                      child: Text(
+                        "Godzila has declared war against you. It is the king of monsters. To battle him finish the 14 day challenge or you will be crushed by Godzila",
+                        style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                          fontSize: 14.0,
+                          color: PRIMARY_COLOR,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ) : Container(),
+                    _appData.story ? StreamBuilder(
+                        stream: _profileBloc.userDetailsStream,
+                        builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+
+                          if(snapshot.hasData){
+                            if(snapshot.data.step == 13){
+                              return Container(
+                                color: Colors.green,
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: Utils.getDesignHeight(15)
+                                ),
+                                child: Text(
+                                  "Story Completed",
+                                  style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                    fontSize: 15.0,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              );
+                            }else{
+                              return _storyWidget(
+                                activeStep: snapshot.data.step,
+                              );
+                            }
+                          }else{
+                            return Container();
+                          }
+                        }
+                    ) : Container(),
+                  ],
+                ): Container();
+              }
           ),
         ),
-        LoadingBarrier(_loadingBloc.isLoading),
-      ],
+      ),
     );
   }
 

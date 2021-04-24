@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flex/bloc/change_user_details_bloc.dart';
+import 'package:flex/bloc/content_bloc.dart';
 import 'package:flex/bloc/home_screen_bloc.dart';
 import 'package:flex/bloc/landing_screen_bloc.dart';
 import 'package:flex/bloc/leaderboard_bloc.dart';
@@ -46,7 +47,7 @@ class _FelxHeadState extends State<FelxHead> {
   HomeScreenBloc _homeScreenBloc;
   LeaderboardBloc _leaderboardBloc;
   ProfileBloc _profileBloc;
-  ChangeUserDetailsBloc _changeUserDetailsBloc;
+  ContentScreenBloc _contentScreenBloc;
 
   @override
   void initState() {
@@ -156,6 +157,14 @@ class _FelxHeadState extends State<FelxHead> {
               return MaterialPageRoute(
                 builder: (c) => MultiProvider(
                   providers: [
+                    Provider<ContentScreenBloc>(
+                      create: (context) {
+                        _contentScreenBloc = ContentScreenBloc();
+                        return _contentScreenBloc;
+                      },
+                      dispose: (_, bloc) => bloc.dispose(),
+                    ),
+
                     Provider<HomeScreenBloc>(
                       create: (context) {
                         _homeScreenBloc = HomeScreenBloc();

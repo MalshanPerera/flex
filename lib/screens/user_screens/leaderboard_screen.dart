@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flex/bloc/leaderboard_bloc.dart';
-import 'package:flex/bloc/loading_bloc.dart';
 import 'package:flex/helper/app_assets.dart';
 import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_utils.dart';
-import 'package:flex/widgets/loading_barrier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +16,6 @@ class LeaderBoardScreen extends StatefulWidget {
 class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
 
   LeaderboardBloc _leaderboardBloc;
-  LoadingBloc _loadingBloc;
 
   String _uuid;
 
@@ -30,55 +27,41 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
 
     if(!_isLoaded){
       _uuid = FirebaseAuth.instance.currentUser.uid;
-
       _leaderboardBloc = Provider.of<LeaderboardBloc>(context);
-      _loadingBloc = Provider.of<LoadingBloc>(context);
-
       _leaderboardBloc.getLeaderboardData();
-
       _isLoaded = true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          color: PRIMARY_COLOR,
-          child: SafeArea(
-            child: Scaffold(
-              backgroundColor: BACKGROUND_COLOR,
-              body: Column(
-                children: [
-                  _leaderboardHeader(),
-                  Expanded(
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance.collection('leaderboard').orderBy('points', descending: true).snapshots(),
-                      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        return snapshot.hasData ? ListView.builder(
-                          itemCount: snapshot.data.docs.length,
-                          itemBuilder: (BuildContext context, index){
-                            return Padding(
-                              padding: EdgeInsets.only(top: 10.0, left: Utils.getDesignWidth(24), right: Utils.getDesignWidth(24)),
-                              child: _leaderboardTile(
-                                name: "${snapshot.data.docs[index]['name']}",
-                                points: "${snapshot.data.docs[index]['points']} pts",
-                                index: index,
-                              ),
-                            );
-                          },
-                        ) : Container();
-                      }
-                    ),
-                  ),
-                ],
-              ),
+    return Scaffold(
+      backgroundColor: BACKGROUND_COLOR,
+      body: Column(
+        children: [
+          _leaderboardHeader(),
+          Expanded(
+            child: StreamBuilder(
+                stream: FirebaseFirestore.instance.collection('leaderboard').orderBy('points', descending: true).snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  return snapshot.hasData ? ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (BuildContext context, index){
+                      return Padding(
+                        padding: EdgeInsets.only(top: 10.0, left: Utils.getDesignWidth(24), right: Utils.getDesignWidth(24)),
+                        child: _leaderboardTile(
+                          name: "${snapshot.data.docs[index]['name']}",
+                          points: "${snapshot.data.docs[index]['points']} pts",
+                          index: index,
+                        ),
+                      );
+                    },
+                  ) : Container();
+                }
             ),
           ),
-        ),
-        LoadingBarrier(_loadingBloc.isLoading),
-      ],
+        ],
+      ),
     );
   }
 

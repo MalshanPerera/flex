@@ -33,6 +33,10 @@ class ChangeUserDetailsBloc extends BaseBloc {
   Stream<UserDetails> get userDetailsStream => _userDetailsSubject.stream;
   Sink<UserDetails> get userDetailsSink => _userDetailsSubject.sink;
 
+  PublishSubject<int> _tabIndexSubject = PublishSubject<int>();
+  Stream<int> get tabIndexStream => _tabIndexSubject.stream;
+  Sink<int> get tabIndexSink => _tabIndexSubject.sink;
+
   BehaviorSubject<bool> _levelSubject = BehaviorSubject<bool>();
   Stream<bool> get levelStream => _levelSubject.stream;
   Sink<bool> get levelSink => _levelSubject.sink;
@@ -70,6 +74,8 @@ class ChangeUserDetailsBloc extends BaseBloc {
     _appData.level = doc.data()['game_elements']['level'];
     _appData.story = doc.data()['game_elements']['story'];
 
+    tabIndexSink.add(0);
+
     if(doc.data()['userType'] == "Achiever"){
       _appData.userTypes = UserTypes.ACHIEVER;
     }
@@ -105,7 +111,10 @@ class ChangeUserDetailsBloc extends BaseBloc {
       await locator<FirebaseService>().updateUserData(userId: _uuid, map: userData).whenComplete(() => getUserData());
       _eventBus.fire(LoadEvent.hide());
 
-      locator<NavigationService>().showError(ExceptionTypes.SUCCESS, "User Details Updated Successfully!!");
+      tabIndexSink.add(_appData.leaderboard ? 2 : 1);
+
+      // locator<NavigationService>().showError(ExceptionTypes.SUCCESS, "User Details Updated Successfully!!");
+      locator<NavigationService>().pop(isTrue: true);
 
     }catch(error){
       print(error.toString());
@@ -187,6 +196,7 @@ class ChangeUserDetailsBloc extends BaseBloc {
     _achievementAndBadgesSubject.close();
     _leaderboardSubject.close();
     _storySubject.close();
+    _tabIndexSubject.close();
   }
 
 }
