@@ -35,33 +35,30 @@ class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: BACKGROUND_COLOR,
-      body: Column(
-        children: [
-          _leaderboardHeader(),
-          Expanded(
-            child: StreamBuilder(
-                stream: FirebaseFirestore.instance.collection('leaderboard').orderBy('points', descending: true).snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  return snapshot.hasData ? ListView.builder(
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (BuildContext context, index){
-                      return Padding(
-                        padding: EdgeInsets.only(top: 10.0, left: Utils.getDesignWidth(24), right: Utils.getDesignWidth(24)),
-                        child: _leaderboardTile(
-                          name: "${snapshot.data.docs[index]['name']}",
-                          points: "${snapshot.data.docs[index]['points']} pts",
-                          index: index,
-                        ),
-                      );
-                    },
-                  ) : Container();
-                }
-            ),
+    return Column(
+      children: [
+        _leaderboardHeader(),
+        Expanded(
+          child: StreamBuilder(
+              stream: FirebaseFirestore.instance.collection('leaderboard').orderBy('points', descending: true).snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                return snapshot.hasData ? ListView.builder(
+                  itemCount: snapshot.data.docs.length,
+                  itemBuilder: (BuildContext context, index){
+                    return Padding(
+                      padding: EdgeInsets.only(top: 10.0, left: Utils.getDesignWidth(24), right: Utils.getDesignWidth(24)),
+                      child: _leaderboardTile(
+                        name: "${snapshot.data.docs[index]['name']}",
+                        points: "${snapshot.data.docs[index]['points']} pts",
+                        index: index,
+                      ),
+                    );
+                  },
+                ) : Container();
+              }
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

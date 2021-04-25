@@ -53,6 +53,7 @@ class _ContentScreenState extends State<ContentScreen> {
             Container(
               color: BACKGROUND_COLOR,
               child: SafeArea(
+                bottom: false,
                 child: Scaffold(
                   backgroundColor: BACKGROUND_COLOR,
                   body: _appData.leaderboard ? StreamBuilder(

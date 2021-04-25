@@ -45,136 +45,133 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: BACKGROUND_COLOR,
-      body: Padding(
-        padding: EdgeInsets.only(left: Utils.getDesignWidth(26), top: Utils.getDesignHeight(20.0), right: Utils.getDesignWidth(26)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: StreamBuilder(
-                        stream: _homeScreenBloc.userDetailsStream,
-                        builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                          return Text(
-                            snapshot.hasData ? "Hello ${snapshot.data.name}" : "Hello Minh Q.N",
-                            style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 35.0,
-                            ),
-                            overflow: TextOverflow.fade,
-                          );
-                        }
-                    ),
+    return Padding(
+      padding: EdgeInsets.only(left: Utils.getDesignWidth(26), top: Utils.getDesignHeight(20.0), right: Utils.getDesignWidth(26)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: StreamBuilder(
+                      stream: _homeScreenBloc.userDetailsStream,
+                      builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                        return Text(
+                          snapshot.hasData ? "Hello ${snapshot.data.name}" : "Hello Minh Q.N",
+                          style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 35.0,
+                          ),
+                          overflow: TextOverflow.fade,
+                        );
+                      }
                   ),
-                  CircleAvatar(
-                    radius: 30.0,
-                    backgroundImage:
-                    NetworkImage(DEFAULT_AVATAR),
-                    backgroundColor: PRIMARY_COLOR,
-                  ),
-                ],
-              ),
+                ),
+                CircleAvatar(
+                  radius: 30.0,
+                  backgroundImage:
+                  NetworkImage(DEFAULT_AVATAR),
+                  backgroundColor: PRIMARY_COLOR,
+                ),
+              ],
             ),
-            Text(
-              _greeting(),
+          ),
+          Text(
+            _greeting(),
+            style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
+              color: Colors.grey.withOpacity(0.5),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Utils.getDesignHeight(40.0)),
+            child: Text(
+              "Your Progression",
               style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
                 fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-                color: Colors.grey.withOpacity(0.5),
+                fontSize: 25.0,
+                color: Colors.black,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: Utils.getDesignHeight(40.0)),
-              child: Text(
-                "Your Progression",
-                style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25.0,
-                  color: Colors.black,
+          ),
+          Container(
+            margin: EdgeInsets.only(top: Utils.getDesignHeight(15.0),),
+            padding: EdgeInsets.symmetric(
+              horizontal: Utils.getDesignWidth(20.0),
+              vertical: Utils.getDesignWidth(15.0),),
+            decoration: BoxDecoration(
+              color: PRIMARY_COLOR,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StreamBuilder(
+                    stream: _homeScreenBloc.userDetailsStream,
+                    builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                      return _progressWidget(
+                        title: "Arms Workout",
+                        percent: snapshot.hasData ? snapshot.data.armsProgress : 0.0,
+                        daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.armsProgress : 0.0),
+                      );
+                    }
                 ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: Utils.getDesignHeight(15.0),),
-              padding: EdgeInsets.symmetric(
-                horizontal: Utils.getDesignWidth(20.0),
-                vertical: Utils.getDesignWidth(15.0),),
-              decoration: BoxDecoration(
-                color: PRIMARY_COLOR,
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              ),
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  StreamBuilder(
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: Utils.getDesignHeight(10.0),),
+                  child: StreamBuilder(
                       stream: _homeScreenBloc.userDetailsStream,
                       builder: (context, AsyncSnapshot<UserDetails> snapshot) {
                         return _progressWidget(
-                          title: "Arms Workout",
-                          percent: snapshot.hasData ? snapshot.data.armsProgress : 0.0,
-                          daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.armsProgress : 0.0),
+                          title: "Abs Workout",
+                          percent: snapshot.hasData ? snapshot.data.absProgress : 0.0,
+                          daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.absProgress : 0.0),
                         );
                       }
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: Utils.getDesignHeight(10.0),),
-                    child: StreamBuilder(
-                        stream: _homeScreenBloc.userDetailsStream,
-                        builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                          return _progressWidget(
-                            title: "Abs Workout",
-                            percent: snapshot.hasData ? snapshot.data.absProgress : 0.0,
-                            daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.absProgress : 0.0),
-                          );
-                        }
-                    ),
-                  ),
-                  StreamBuilder(
-                      stream: _homeScreenBloc.userDetailsStream,
-                      builder: (context, AsyncSnapshot<UserDetails> snapshot) {
-                        return _progressWidget(
-                          title: "Full Body Workout",
-                          percent: snapshot.hasData ? snapshot.data.fullBodyProgress : 0.0,
-                          daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.fullBodyProgress : 0.0),
-                        );
-                      }
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: Utils.getDesignHeight(40.0)),
-              child: Text(
-                "Categories",
-                style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25.0,
-                  color: Colors.black,
                 ),
+                StreamBuilder(
+                    stream: _homeScreenBloc.userDetailsStream,
+                    builder: (context, AsyncSnapshot<UserDetails> snapshot) {
+                      return _progressWidget(
+                        title: "Full Body Workout",
+                        percent: snapshot.hasData ? snapshot.data.fullBodyProgress : 0.0,
+                        daysLeft: _getDaysLeft(snapshot.hasData ? snapshot.data.fullBodyProgress : 0.0),
+                      );
+                    }
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: Utils.getDesignHeight(40.0)),
+            child: Text(
+              "Categories",
+              style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 25.0,
+                color: Colors.black,
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                  padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0)),
-                  itemCount: _categoryList.length,
-                  itemBuilder: (BuildContext context, index){
-                    return _categoriesListTile(
-                      image: _categoryList[index]['image'],
-                      title: _categoryList[index]['title'],
-                      index: index,
-                    );
-                  }),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: ListView.builder(
+                padding: EdgeInsets.only(top: Utils.getDesignHeight(10.0)),
+                itemCount: _categoryList.length,
+                itemBuilder: (BuildContext context, index){
+                  return _categoriesListTile(
+                    image: _categoryList[index]['image'],
+                    title: _categoryList[index]['title'],
+                    index: index,
+                  );
+                }),
+          ),
+        ],
       ),
     );
   }
