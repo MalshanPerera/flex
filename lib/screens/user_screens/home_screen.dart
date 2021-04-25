@@ -229,6 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LinearPercentIndicator(
                 animation: true,
@@ -241,11 +242,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: Colors.white,
                 progressColor: PINK,
               ),
-              Text(
-                "$daysLeft",
-                style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
-                  fontSize: 15.0,
-                  color: Colors.yellow,
+              Padding(
+                padding: EdgeInsets.only(left: Utils.getDesignWidth(5.0)),
+                child: Text(
+                  "$daysLeft",
+                  style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                    fontSize: 15.0,
+                    color: Colors.yellow,
+                  ),
                 ),
               ),
             ],

@@ -90,7 +90,7 @@ class WorkoutBloc extends BaseBloc {
 
     points = _leaderboardMap.data()['points'];
 
-    rates.add(_motivationRateSubject.value);
+    rates.add(_motivationRateSubject.value ?? 0);
 
     bool leaderboardModel = await locator<FirebaseService>().updateLeaderboardData(uid: _uuid, map: {
       'points': points + 10,

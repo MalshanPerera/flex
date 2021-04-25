@@ -154,8 +154,7 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
                           _workoutBloc.setTimer();
                           _modalBottomSheetMenu();
                         }else{
-                          _controller.reset();
-                          _workoutBloc.navigateToHomeScreenPop();
+                          showDialogBox();
                         }
                       },
                     ),
@@ -281,13 +280,82 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
                       decoration: TextDecoration.underline,
                     ),
                   ),
-                  onPressed: () => _workoutBloc.navigateToHomeScreen(),
+                  onPressed: () => _workoutBloc.setMotivationRate(WorkoutType.FULL_BODY),
                 ),
               ),
             ],
           ),
         );
       }
+    );
+  }
+
+  showDialogBox({bool isDismissible = true}) {
+    showDialog(
+      context: context,
+      barrierDismissible: isDismissible,
+      builder: (_) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 20.0),
+              child: Text('Are you sure you want to quit the workout?',
+                style: Theme.of(context).primaryTextTheme.button.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 30.0, right: 10.0),
+                    height: Utils.getDesignHeight(40),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {
+                        _controller.reset();
+                        _workoutBloc.navigateToHomeScreen();
+                      },
+                      child: Text(
+                        "Yes",
+                        style: Theme.of(context).primaryTextTheme.button.copyWith(
+                          fontSize: 15,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 30.0, left: 10.0),
+                    height: Utils.getDesignHeight(40),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () => _workoutBloc.navigateToHomeScreenPop(),
+                      child: Text(
+                        "No",
+                        style: Theme.of(context).primaryTextTheme.button.copyWith(
+                          fontSize: 15,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
