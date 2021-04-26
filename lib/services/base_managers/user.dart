@@ -5,6 +5,8 @@ abstract class UserManager {
 
   Future<String> get getDate;
 
+  Future<String> get getRateDate;
+
   Future<String> get getUserId;
 
   Future<int> get getAchievement;
@@ -12,6 +14,8 @@ abstract class UserManager {
   void saveUserId(String uid);
 
   void saveDate(String date);
+
+  void saveRateDate(String rateDate);
 
   void setAchievement(int count);
 

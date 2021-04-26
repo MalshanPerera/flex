@@ -80,6 +80,7 @@ class AuthenticationBloc extends BaseBloc {
       'achievement': [],
       'badges': [],
       'motivation_rating': [],
+      'gamification_element_rating': [],
       'weight': weight,
       'height': height,
       'expPoints': 0,

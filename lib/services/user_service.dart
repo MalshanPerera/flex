@@ -18,6 +18,12 @@ class UserService extends UserManager{
   }
 
   @override
+  Future<String> get getRateDate async {
+    final instance = await SharedPreferences.getInstance();
+    return instance.getString('rateDate');
+  }
+
+  @override
   Future<bool> get isLoggedIn async {
     final instance = await SharedPreferences.getInstance();
     return instance.containsKey('userId');
@@ -39,6 +45,12 @@ class UserService extends UserManager{
   void saveDate(String date) async {
     final instance = await SharedPreferences.getInstance();
     instance.setString('date', date);
+  }
+
+  @override
+  void saveRateDate(String rateDate) async {
+    final instance = await SharedPreferences.getInstance();
+    instance.setString('rateDate', rateDate);
   }
 
   @override
