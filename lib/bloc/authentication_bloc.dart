@@ -65,7 +65,7 @@ class AuthenticationBloc extends BaseBloc {
     }
   }
 
-  void signUp({String email, String password, String name, String gender, double weight, double height, String userType}) async {
+  Future<bool> signUp({String email, String password, String name, String gender, double weight, double height, String userType}) async {
 
     String uid;
     Map<String, dynamic> userData = {
@@ -105,8 +105,11 @@ class AuthenticationBloc extends BaseBloc {
       _userService.saveUserId(uid);
       print("UUID: $uid");
 
+      return true;
+
     }catch(error){
       print(error.toString());
+      return false;
     }
   }
 
