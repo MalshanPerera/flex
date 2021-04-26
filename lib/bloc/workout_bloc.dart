@@ -77,7 +77,7 @@ class WorkoutBloc extends BaseBloc {
     DocumentSnapshot doc = await locator<FirebaseService>().getUserData(userId: _uuid);
 
     progress = workoutType == WorkoutType.ABS ? doc.data()["abs_progress"].toDouble() : workoutType == WorkoutType.ARMS ? doc.data()["arms_progress"].toDouble() : doc.data()["full_body_progress"].toDouble();
-    progress = doc.data()["expPoints"].toDouble();
+    expPoints = doc.data()["expPoints"];
     step = doc.data()["step"];
 
     doc.data()["motivation_rating"].forEach((rate){

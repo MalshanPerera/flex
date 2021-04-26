@@ -24,6 +24,7 @@ import 'package:flex/screens/user_screens/user_sigin_up_screen.dart';
 import 'package:flex/screens/user_screens/workout_screens/abs_screen.dart';
 import 'package:flex/screens/user_screens/workout_screens/arms_screen.dart';
 import 'package:flex/screens/user_screens/workout_screens/full_body_screen.dart';
+import 'package:flex/screens/user_screens/workout_screens/test_screen.dart';
 import 'package:flex/service_locator.dart';
 import 'package:flex/services/base_managers/exceptions.dart';
 import 'package:flex/services/error_service.dart';
@@ -208,6 +209,14 @@ class _FelxHeadState extends State<FelxHead> {
                 builder: (c) => Provider(
                   create: (context) => WorkoutBloc(),
                   child: FullBodyWorkoutScreen(),
+                  dispose: (_, bloc) => bloc.dispose(),
+                ),
+              );
+            case TEST_WORKOUT_SCREEN:
+              return MaterialPageRoute(
+                builder: (c) => Provider(
+                  create: (context) => WorkoutBloc(),
+                  child: TestWorkoutScreen(),
                   dispose: (_, bloc) => bloc.dispose(),
                 ),
               );

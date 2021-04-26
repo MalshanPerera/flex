@@ -498,7 +498,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     var response = await _profileBloc.navigateToEditScreen();
 
-    if((response != null && response) || response == null){
+    if((response != null && response) || response == null) {
       _profileBloc.getUserData();
     }
   }

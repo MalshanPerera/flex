@@ -17,6 +17,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> _categoryList = [
     {
       'image': FULL_BODY_WORKOUT,
+      'title': 'Test Workout',
+    },
+    {
+      'image': FULL_BODY_WORKOUT,
       'title': 'Full Body Workout',
     },
     {

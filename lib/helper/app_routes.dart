@@ -10,4 +10,5 @@ const String CONTENT_SCREEN = '/content_screen';
 const String ARMS_WORKOUT_SCREEN = '/arms_workout_screen';
 const String ABS_WORKOUT_SCREEN = '/abs_workout_screen';
 const String FULL_BODY_WORKOUT_SCREEN = '/full_body_workout_screen';
+const String TEST_WORKOUT_SCREEN = '/test_workout_screen';
 

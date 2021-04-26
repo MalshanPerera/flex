@@ -26,14 +26,18 @@ class HomeScreenBloc extends BaseBloc {
 
   void navigateToWorkoutScreen(int index){
     if(index == 0){
-      locator<NavigationService>().pushNamed(FULL_BODY_WORKOUT_SCREEN);
+      locator<NavigationService>().pushNamed(TEST_WORKOUT_SCREEN);
     }
 
     if(index == 1){
-      locator<NavigationService>().pushNamed(ARMS_WORKOUT_SCREEN);
+      locator<NavigationService>().pushNamed(FULL_BODY_WORKOUT_SCREEN);
     }
 
     if(index == 2){
+      locator<NavigationService>().pushNamed(ARMS_WORKOUT_SCREEN);
+    }
+
+    if(index == 3){
       locator<NavigationService>().pushNamed(ABS_WORKOUT_SCREEN);
     }
 

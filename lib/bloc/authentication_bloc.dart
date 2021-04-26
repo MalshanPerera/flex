@@ -51,7 +51,7 @@ class AuthenticationBloc extends BaseBloc {
 
       // Uid gets null inside the whenComplete
       if(uid != null){
-        locator<NavigationService>().pushReplacement(CONTENT_SCREEN);
+        locator<NavigationService>().pushReplacement(CONTENT_SCREEN, args: false);
       }
 
       _userService.saveUserId(uid);
