@@ -12,5 +12,6 @@ class AppData {
   bool leaderboard;
   bool story;
   bool level;
+  bool points;
 
 }

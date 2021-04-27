@@ -53,6 +53,10 @@ class ChangeUserDetailsBloc extends BaseBloc {
   Stream<bool> get storyStream => _storySubject.stream;
   Sink<bool> get storySink => _storySubject.sink;
 
+  BehaviorSubject<bool> _pointsSubject = BehaviorSubject<bool>();
+  Stream<bool> get pointsStream => _pointsSubject.stream;
+  Sink<bool> get pointsSink => _pointsSubject.sink;
+
   void getUserData() async {
 
     _uuid = await _userService.getUserId;
@@ -68,11 +72,13 @@ class ChangeUserDetailsBloc extends BaseBloc {
     leaderboardSink.add(doc.data()['game_elements']['leaderboard']);
     storySink.add(doc.data()['game_elements']['story']);
     levelSink.add(doc.data()['game_elements']['level']);
+    pointsSink.add(doc.data()['game_elements']['points']);
 
     _appData.achievementsBadges = doc.data()['game_elements']['achievements_badges'];
     _appData.leaderboard = doc.data()['game_elements']['leaderboard'];
     _appData.level = doc.data()['game_elements']['level'];
     _appData.story = doc.data()['game_elements']['story'];
+    _appData.points = doc.data()['game_elements']['points'];
 
     tabIndexSink.add(0);
 
@@ -102,6 +108,7 @@ class ChangeUserDetailsBloc extends BaseBloc {
         'leaderboard': _leaderboardSubject.value,
         'story': _storySubject.value,
         'level': _levelSubject.value,
+        'points': _pointsSubject.value,
       },
     };
 
@@ -113,7 +120,6 @@ class ChangeUserDetailsBloc extends BaseBloc {
 
       tabIndexSink.add(_appData.leaderboard ? 2 : 1);
 
-      // locator<NavigationService>().showError(ExceptionTypes.SUCCESS, "User Details Updated Successfully!!");
       locator<NavigationService>().pop(isTrue: true);
 
     }catch(error){
@@ -131,6 +137,7 @@ class ChangeUserDetailsBloc extends BaseBloc {
         'leaderboard': true,
         'story': false,
         'level': true,
+        'points': true,
       };
     }
     if(userType == "Explorer"){
@@ -139,6 +146,7 @@ class ChangeUserDetailsBloc extends BaseBloc {
         'leaderboard': false,
         'story': true,
         'level': true,
+        'points': false,
       };
     }
     if(userType == "Achiever"){
@@ -147,6 +155,7 @@ class ChangeUserDetailsBloc extends BaseBloc {
         'leaderboard': true,
         'story': false,
         'level': true,
+        'points': true,
       };
     }
     if(userType == "Socializer"){
@@ -155,6 +164,7 @@ class ChangeUserDetailsBloc extends BaseBloc {
         'leaderboard': false,
         'story': true,
         'level': false,
+        'points': false,
       };
     }
 
@@ -163,6 +173,7 @@ class ChangeUserDetailsBloc extends BaseBloc {
       'leaderboard': false,
       'story': false,
       'level': false,
+      'points': false,
     };
   }
 
@@ -197,6 +208,7 @@ class ChangeUserDetailsBloc extends BaseBloc {
     _leaderboardSubject.close();
     _storySubject.close();
     _tabIndexSubject.close();
+    _pointsSubject.close();
   }
 
 }

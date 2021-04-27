@@ -138,6 +138,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           overflow: TextOverflow.fade,
                                         ),
+                                        _appData.points ? Container(
+                                          margin: EdgeInsets.only(top: Utils.getDesignHeight(10)),
+                                          child: Text(
+                                            "Points: ${snapshot.data.points}" ,
+                                            style: Theme.of(context).primaryTextTheme.bodyText1.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ): Container(),
                                       ],
                                     ) : Container();
                                   }

@@ -128,6 +128,7 @@ class AuthenticationBloc extends BaseBloc {
       _appData.leaderboard = AppMethods.getElements(userType: doc.data()['userType'])['leaderboard'];
       _appData.level = AppMethods.getElements(userType: doc.data()['userType'])['level'];
       _appData.story = AppMethods.getElements(userType: doc.data()['userType'])['story'];
+      _appData.points = AppMethods.getElements(userType: doc.data()['userType'])['points'];
 
       if(doc.data()['userType'] == "Achiever"){
         _appData.userTypes = UserTypes.ACHIEVER;

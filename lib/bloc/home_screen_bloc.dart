@@ -58,6 +58,7 @@ class HomeScreenBloc extends BaseBloc {
     _appData.leaderboard = doc.data()['game_elements']['leaderboard'];
     _appData.level = doc.data()['game_elements']['level'];
     _appData.story = doc.data()['game_elements']['story'];
+    _appData.points = doc.data()['game_elements']['points'];
 
     if(doc.data()['userType'] == "Achiever"){
       _appData.userTypes = UserTypes.ACHIEVER;

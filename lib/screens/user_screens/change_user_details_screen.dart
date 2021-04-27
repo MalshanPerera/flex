@@ -302,8 +302,19 @@ class _ChangeUserDetailsScreenState extends State<ChangeUserDetailsScreen > {
                                 );
                               }
                             ),
+                            StreamBuilder(
+                                initialData: false,
+                                stream: _changeUserDetailsBloc.pointsStream,
+                                builder: (context, snapshot) {
+                                  return _gameElementsOnOff(
+                                    text: "Points",
+                                    value: snapshot.data,
+                                    onChanged: (value) => _changeUserDetailsBloc.pointsSink.add(value),
+                                  );
+                                }
+                            ),
                             Container(
-                              margin: EdgeInsets.only(top: Utils.getDesignHeight(20.0)),
+                              margin: EdgeInsets.only(top: Utils.getDesignHeight(20.0), bottom: Utils.getDesignHeight(10.0)),
                               width: double.infinity,
                               height: Utils.getDesignHeight(50),
                               decoration: BoxDecoration(

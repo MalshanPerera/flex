@@ -9,6 +9,7 @@ class AppMethods {
         'leaderboard': true,
         'story': false,
         'level': true,
+        'points': true,
       };
     }
     if(userType == "Explorer"){
@@ -17,6 +18,7 @@ class AppMethods {
         'leaderboard': false,
         'story': true,
         'level': true,
+        'points': false,
       };
     }
     if(userType == "Achiever"){
@@ -25,6 +27,7 @@ class AppMethods {
         'leaderboard': true,
         'story': false,
         'level': true,
+        'points': true,
       };
     }
     if(userType == "Socializer"){
@@ -33,6 +36,7 @@ class AppMethods {
         'leaderboard': false,
         'story': true,
         'level': false,
+        'points': false,
       };
     }
 
@@ -41,7 +45,7 @@ class AppMethods {
       'leaderboard': false,
       'story': false,
       'level': false,
+      'points': false,
     };
   }
-
 }
