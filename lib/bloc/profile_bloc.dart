@@ -10,6 +10,7 @@ import 'package:flex/service_locator.dart';
 import 'package:flex/services/firebase_service.dart';
 import 'package:flex/services/navigation_service.dart';
 import 'package:flex/services/user_service.dart';
+import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProfileBloc extends BaseBloc {
@@ -19,9 +20,18 @@ class ProfileBloc extends BaseBloc {
   final _userService = locator<UserService>();
   final _eventBus = locator<EventBus>();
 
+  String _uuid;
+
   BehaviorSubject<UserDetails> _userDetailsSubject = BehaviorSubject<UserDetails>();
   Stream<UserDetails> get userDetailsStream => _userDetailsSubject.stream;
   Sink<UserDetails> get userDetailsSink => _userDetailsSubject.sink;
+
+  BehaviorSubject<bool> _isDateTrueSubject = BehaviorSubject<bool>.seeded(true);
+  Stream<bool> get getIsDateTrueStream => _isDateTrueSubject.stream;
+  Sink<bool> get setIsDateTrueSink => _isDateTrueSubject.sink;
+
+  BehaviorSubject<double> _gamificationRateSubject = BehaviorSubject<double>();
+  Sink<double> get gamificationRateSink => _gamificationRateSubject.sink;
 
   void getUserData() async {
 
@@ -54,8 +64,58 @@ class ProfileBloc extends BaseBloc {
     }
   }
 
+  void setTimer() async {
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String date = formatter.format(now);
+
+    _userService.saveRateDate(date);
+    getTimer();
+  }
+
+  void getTimer() async {
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String dateNow = formatter.format(now);
+
+    String setDate = await _userService.getRateDate;
+
+    if(dateNow.contains(setDate ?? "") && setDate != null){
+      setIsDateTrueSink.add(true);
+
+    }else{
+      setIsDateTrueSink.add(false);
+    }
+  }
+
+  void setUserData() async {
+
+    _uuid = await _userService.getUserId;
+
+    List<double> rates = [];
+
+    DocumentSnapshot doc = await locator<FirebaseService>().getUserData(userId: _uuid);
+
+    doc.data()['gamification_element_rating'].forEach((element){
+      rates.add(element);
+    });
+
+    rates.add(_gamificationRateSubject.value);
+
+    await locator<FirebaseService>().updateUserData(userId: _uuid, map: {
+      'gamification_element_rating': rates,
+    });
+
+    setTimer();
+    locator<NavigationService>().pop();
+  }
+
   Future<dynamic> navigateToEditScreen() async {
     return locator<NavigationService>().pushNamed(CHANGE_USER_DETAILS_SCREEN);
+  }
+
+  void pop(){
+    locator<NavigationService>().pop();
   }
 
   void logout() async {
@@ -69,5 +129,7 @@ class ProfileBloc extends BaseBloc {
   @override
   dispose() {
     _userDetailsSubject.close();
+    _isDateTrueSubject.close();
+    _gamificationRateSubject.close();
   }
 }

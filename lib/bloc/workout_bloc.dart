@@ -59,6 +59,10 @@ class WorkoutBloc extends BaseBloc {
     locator<NavigationService>().pop();
   }
 
+  void navigatePop(){
+    locator<NavigationService>().pop(isTrue: true);
+  }
+
   void navigateToHomeScreen(){
     locator<NavigationService>().pushReplacement(CONTENT_SCREEN);
   }

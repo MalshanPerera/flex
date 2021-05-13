@@ -19,7 +19,6 @@ class FullBodyWorkoutScreen extends StatefulWidget {
 class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleTickerProviderStateMixin {
 
   WorkoutBloc _workoutBloc;
-  ContentScreenBloc _contentScreenBloc;
   AnimationController _controller;
 
   bool _isLoaded = false;
@@ -36,7 +35,6 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
 
     if(!_isLoaded){
       _workoutBloc = Provider.of<WorkoutBloc>(context);
-      _contentScreenBloc = Provider.of<ContentScreenBloc>(context);
       _workoutBloc.getTimer();
 
       _isLoaded = true;
@@ -155,7 +153,7 @@ class _WorkoutScreenshotsState extends State<FullBodyWorkoutScreen> with SingleT
                       onPressed: snapshot.data ? null : () {
                         if(_controller.isCompleted){
                           _workoutBloc.setTimer();
-                          _modalBottomSheetMenu();
+                          _workoutBloc.navigatePop();
                         }else{
                           showDialogBox();
                         }

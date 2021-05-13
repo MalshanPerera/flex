@@ -1,7 +1,6 @@
 class AppMethods {
 
   static Map<String, bool> getElements({String userType}){
-    print(userType);
 
     if(userType == "Killer"){
       return {

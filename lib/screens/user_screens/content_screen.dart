@@ -25,9 +25,6 @@ class _ContentScreenState extends State<ContentScreen> {
 
   final _appData = AppData.getInstance; //singleton network instance
 
-  StreamSubscription _streamSubscription;
-  Stream<bool> _stream;
-
   ContentScreenBloc _contentScreenBloc;
   ChangeUserDetailsBloc _changeUserDetailsBloc;
   LoadingBloc _loadingBloc;
@@ -43,135 +40,9 @@ class _ContentScreenState extends State<ContentScreen> {
       _loadingBloc = Provider.of<LoadingBloc>(context);
 
       _changeUserDetailsBloc.getUserData();
-      _contentScreenBloc.getTimer();
 
       _isLoaded = true;
     }
-
-    if (_stream != _contentScreenBloc.getIsDateTrueStream) {
-      _stream = _contentScreenBloc.getIsDateTrueStream;
-      _streamSubscription?.cancel();
-      listenPageState(_contentScreenBloc.getIsDateTrueStream);
-    }
-  }
-
-  void listenPageState(Stream<bool> stream) {
-    _streamSubscription = stream.listen((isToday){
-      if(!isToday){
-        Future.delayed(Duration(seconds: 2));
-        showDialogBox();
-      }
-    });
-  }
-
-  showDialogBox({bool isDismissible = true}) {
-    showDialog(
-      context: context,
-      barrierDismissible: isDismissible,
-      builder: (_) => AlertDialog(
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              margin: EdgeInsets.only(bottom: 20.0),
-              child: Text('How would you rate the Game Elements',
-                style: Theme.of(context).primaryTextTheme.button.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            RatingBar.builder(
-              initialRating: 0,
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                switch (index) {
-                  case 0:
-                    return Icon(
-                      Icons.sentiment_very_dissatisfied,
-                      color: Colors.red,
-                    );
-                  case 1:
-                    return Icon(
-                      Icons.sentiment_dissatisfied,
-                      color: Colors.redAccent,
-                    );
-                  case 2:
-                    return Icon(
-                      Icons.sentiment_neutral,
-                      color: Colors.amber,
-                    );
-                  case 3:
-                    return Icon(
-                      Icons.sentiment_satisfied,
-                      color: Colors.lightGreen,
-                    );
-                  case 4:
-                    return Icon(
-                      Icons.sentiment_very_satisfied,
-                      color: Colors.green,
-                    );
-                  default:
-                    return Icon(
-                      Icons.sentiment_very_satisfied,
-                      color: Colors.green,
-                    );
-                }
-              },
-              onRatingUpdate: (rating) => _contentScreenBloc.gamificationRateSink.add(rating),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 30.0),
-                  height: Utils.getDesignHeight(40),
-                  width: Utils.getDesignWidth(100),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
-                    ),
-                    onPressed: () => _contentScreenBloc.pop(),
-                    child: Text(
-                      "Skip",
-                      style: Theme.of(context).primaryTextTheme.button.copyWith(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 30.0),
-                  height: Utils.getDesignHeight(40),
-                  width: Utils.getDesignWidth(100),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
-                    ),
-                    onPressed: () => _contentScreenBloc.setUserData(),
-                    child: Text(
-                      "Rate",
-                      style: Theme.of(context).primaryTextTheme.button.copyWith(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _streamSubscription?.cancel();
-    super.dispose();
   }
 
   @override

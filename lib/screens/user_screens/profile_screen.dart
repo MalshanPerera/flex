@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flex/bloc/home_screen_bloc.dart';
 import 'package:flex/bloc/profile_bloc.dart';
 import 'package:flex/helper/app_assets.dart';
@@ -5,6 +7,7 @@ import 'package:flex/helper/app_colors.dart';
 import 'package:flex/helper/app_data.dart';
 import 'package:flex/helper/app_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +18,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  StreamSubscription _streamSubscription;
+  Stream<bool> _stream;
 
   ProfileBloc _profileBloc;
 
@@ -29,8 +35,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if(!_isLoaded){
       _profileBloc = Provider.of<ProfileBloc>(context);
       _profileBloc.getUserData();
+      _profileBloc.getTimer();
       _isLoaded = true;
     }
+
+    if (_stream != _profileBloc.getIsDateTrueStream) {
+      _stream = _profileBloc.getIsDateTrueStream;
+      _streamSubscription?.cancel();
+      listenPageState(_profileBloc.getIsDateTrueStream);
+    }
+  }
+
+  void listenPageState(Stream<bool> stream) {
+    _streamSubscription = stream.listen((isToday){
+      if(!isToday){
+        Future.delayed(Duration(seconds: 2));
+        showDialogBox();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -316,6 +344,110 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  showDialogBox({bool isDismissible = true}) {
+    showDialog(
+      context: context,
+      barrierDismissible: isDismissible,
+      builder: (_) => AlertDialog(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 20.0),
+              child: Text('How would you rate the Game Elements',
+                style: Theme.of(context).primaryTextTheme.button.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            RatingBar.builder(
+              initialRating: 0,
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                switch (index) {
+                  case 0:
+                    return Icon(
+                      Icons.sentiment_very_dissatisfied,
+                      color: Colors.red,
+                    );
+                  case 1:
+                    return Icon(
+                      Icons.sentiment_dissatisfied,
+                      color: Colors.redAccent,
+                    );
+                  case 2:
+                    return Icon(
+                      Icons.sentiment_neutral,
+                      color: Colors.amber,
+                    );
+                  case 3:
+                    return Icon(
+                      Icons.sentiment_satisfied,
+                      color: Colors.lightGreen,
+                    );
+                  case 4:
+                    return Icon(
+                      Icons.sentiment_very_satisfied,
+                      color: Colors.green,
+                    );
+                  default:
+                    return Icon(
+                      Icons.sentiment_very_satisfied,
+                      color: Colors.green,
+                    );
+                }
+              },
+              onRatingUpdate: (rating) => _profileBloc.gamificationRateSink.add(rating),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 30.0),
+                  height: Utils.getDesignHeight(40),
+                  width: Utils.getDesignWidth(100),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: () => _profileBloc.pop(),
+                    child: Text(
+                      "Skip",
+                      style: Theme.of(context).primaryTextTheme.button.copyWith(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 30.0),
+                  height: Utils.getDesignHeight(40),
+                  width: Utils.getDesignWidth(100),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: () => _profileBloc.setUserData(),
+                    child: Text(
+                      "Rate",
+                      style: Theme.of(context).primaryTextTheme.button.copyWith(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
